@@ -1,38 +1,135 @@
-.App {
-  text-align: center;
+.ag-theme-alpine .ag-header {
+  background-color: #4c7fc1 !important;
+  color: white;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ag-theme-alpine .ag-header-icon.ag-header-icon {
+  color: white;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ag-theme-alpine .ag-header-cell-label {
+  color: white;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.ag-theme-alpine .ag-row.ag-row {
+  font-size: 16px;
+}
+.ag-theme-alpine .ag-header.ag-header {
+  font-size: 16px;
+}
+.ag-row .ag-cell {
+  display: flex;
+  align-items: center;
+}
+#root {
+  /* width: 100vw; */
+  height: 100vh;
+}
+.table-container {
+  max-width: 1500px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+.dropdown-container {
+  max-width: 1500px;
+  width: 100%;
+  padding: 20px 0px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container {
+  direction: rtl;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+.title {
+  font-size: 25px;
+  padding: 25px 0;
+  /* text-align: start; */
+  /* align-self: flex-start; */
+  display: block;
+  background-color: #4c7fc1 !important;
   color: white;
+  width: 100%;
+  text-align: center;
+}
+.subtitle {
+  margin: 15px;
 }
 
-.App-link {
-  color: #61dafb;
+.details-button {
+  text-decoration: none;
+  padding: 5px 10px;
+  height: 25px;
+  color: #094c86;
+  background-color: #fff;
+  font-family: open_sans_hebrewbold;
+  padding-top: 2px;
+  border: 2px solid #094c86;
+}
+.details-button:hover {
+  color: #fff !important;
+  background-color: #094c86 !important;
+  border: 2px solid #094c86;
+}
+.MuiList-root,
+.MuiPaper-root {
+  direction: rtl;
+}
+#demo-simple-select {
+  padding-left: 32px;
+  padding-right: 14px;
+}
+.MuiInputBase-root svg {
+  left: 7px;
+  right: unset;
+}
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+.dataCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.fetchIconInner {
+  width: 16px !important;
+  margin-right: 8px;
+  opacity: 0.25;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dataCell:hover .fetchIconInner {
+  opacity: 1;
+}
+.map {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+  text-decoration: none;
+  padding: 17.5px 14px;
+  color: #094c86;
+  background-color: #fff;
+  font-family: open_sans_hebrewbold;
+  border: 1px solid;
+  margin-inline-start: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  border-color: rgba(0, 0, 0, 0.23);
+  /* transition: all 0.1s ease-in-out; */
+}
+.map:hover {
+  color: #fff !important;
+  background-color: #4c7fc1 !important;
+  border: 1px solid #4c7fc1;
 }
