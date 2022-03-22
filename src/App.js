@@ -5,8 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import data from "./data.json";
-import { getCities } from "./utils";
+import rawData from "./data.json";
+import localData from "./localData.json";
+import { enrichData, getCities } from "./utils";
 import "./App.css";
 import { AgGridReact } from "ag-grid-react";
 
@@ -16,7 +17,47 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { getColumnDefs } from "./utils";
 import Dropdown from "./Dropdown";
 
+window.fetchAll = async function () {
+  const fetchOne = async (lottery) => {
+    const result = await fetch(
+      `https://www.dira.moch.gov.il/api/Invoker?method=LotteryResult&param=%3FlotteryNumber%3D${lottery}%26firstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26LoginId%3D%26`,
+      {
+        headers: {
+          accept: "application/json, text/plain, */*",
+          "accept-language": "en-US,en;q=0.9,he;q=0.8",
+          "sec-ch-ua":
+            '" Not A;Brand";v="99", "Chromium";v="99", "Google Chrome";v="99"',
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": '"Windows"',
+          "sec-fetch-dest": "empty",
+        },
+        body: null,
+        method: "GET",
+      }
+    );
+    const json = await result.json();
+    return [lottery, json.MyLotteryResult.LocalHousing];
+  };
+  const lotteries = data.map((row) => row.LotteryNumber);
+  const chunksOfSix = lotteries.reduce((acc, cur, i) => {
+    if (i % 10 === 0) {
+      acc.push([]);
+    }
+    acc[acc.length - 1].push(cur);
+    return acc;
+  }, []);
+  let res = [];
+  for (let i = 0; i < chunksOfSix.length; i++) {
+    const lotteries = chunksOfSix[i];
+    const result = await Promise.all(lotteries.map(fetchOne));
+    res = res.concat(result);
+  }
+  console.log(Object.fromEntries(res));
+};
+
 export const RowDataContext = React.createContext();
+
+const data = enrichData(rawData, localData);
 
 const App = () => {
   const [rowData, setRowData] = useState(data);
@@ -100,7 +141,7 @@ const App = () => {
               value={{ rowData, updateForLotteryNumber }}
             >
               <AgGridReact
-              suppressCellSelection={true}
+                suppressCellSelection={true}
                 rowHeight={50}
                 headerHeight={50}
                 // domLayout="autoHeight"

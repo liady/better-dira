@@ -29,6 +29,16 @@ export function getCities(data) {
   return [...citiesMap.entries()];
 }
 
+export function enrichData(rawData, localData) {
+  return rawData.map((lottery) => {
+    const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
+    return {
+      ...lottery,
+      LocalHousing,
+    };
+  });
+}
+
 export function getColumnDefs() {
   return [
     { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
@@ -75,6 +85,12 @@ export function getColumnDefs() {
       minWidth: 100,
       maxWidth: 100,
     },
+    {
+        field: "LocalHousing",
+        headerName: "לבני מקום",
+        minWidth: 110,
+        maxWidth: 110,
+      },
     {
       cellRenderer: Registrants,
       headerName: "נרשמו",
