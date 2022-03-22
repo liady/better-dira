@@ -1,4 +1,4 @@
-import { LocalRegistrants, Registrants, Registration } from "./Renderers";
+import { Registration } from "./Renderers";
 
 const currencyFormatter = new Intl.NumberFormat("he-IL", {
   style: "currency",
