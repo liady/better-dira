@@ -189,6 +189,7 @@ const App = () => {
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
                 onBodyScroll={onVisibleRowsChange}
+                onRowDataChanged={onVisibleRowsChange}
               ></AgGridReact>
             </RowDataContext.Provider>
           </div>
