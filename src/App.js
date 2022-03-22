@@ -119,6 +119,7 @@ const App = () => {
 
   const onVisibleRowsChange = async (params) => {
     const gridApi = params.api;
+    console.log("hi");
     if (!gridApi) {
       return;
     }
@@ -189,7 +190,7 @@ const App = () => {
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
                 onBodyScroll={onVisibleRowsChange}
-                onRowDataChanged={onVisibleRowsChange}
+                onModelUpdated={onVisibleRowsChange}
               ></AgGridReact>
             </RowDataContext.Provider>
           </div>
