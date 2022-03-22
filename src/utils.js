@@ -39,6 +39,64 @@ export function enrichData(rawData, localData) {
   });
 }
 
+export async function fetchNewData({ project, lottery }) {
+  const resp = await fetch(
+    `https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26PageNumber%3D1%26PageSize%3D12%26ProjectNumber%3D${project}%26LotteryNumber%3D${lottery}%26`,
+    {
+      headers: {
+        accept: "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9,he;q=0.8",
+        "sec-ch-ua":
+          '" Not A;Brand";v="99", "Chromium";v="99", "Google Chrome";v="99"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+      },
+      body: null,
+      method: "GET",
+    }
+  );
+  const json = await resp.json();
+  const { TotalLocalSubscribers, TotalSubscribers } =
+    json.ProjectItems[0].LotteryStageSummery;
+  return {
+    TotalLocalSubscribers,
+    TotalSubscribers,
+  };
+}
+
+export async function fetchAllSubscribers(data) {
+  const lotteries = data.map((row) => ({
+    project: row.ProjectNumber,
+    lottery: row.LotteryNumber,
+  }));
+  const chunksOfSix = lotteries.reduce((acc, cur, i) => {
+    if (i % 10 === 0) {
+      acc.push([]);
+    }
+    acc[acc.length - 1].push(cur);
+    return acc;
+  }, []);
+  let res = [];
+  for (let i = 0; i < chunksOfSix.length; i++) {
+    const lotteries = chunksOfSix[i];
+    const result = await Promise.all(
+      lotteries.map(async ({ project, lottery }) => {
+        const subscribers = await fetchNewData({ project, lottery });
+        return [
+          lottery,
+          {
+            _registrants: subscribers.TotalSubscribers,
+            _localRegistrants: subscribers.TotalLocalSubscribers,
+          },
+        ];
+      })
+    );
+    res = res.concat(result);
+  }
+  return Object.fromEntries(res);
+}
+
 export function getColumnDefs() {
   return [
     { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
@@ -86,11 +144,11 @@ export function getColumnDefs() {
       maxWidth: 100,
     },
     {
-        field: "LocalHousing",
-        headerName: "לבני מקום",
-        minWidth: 110,
-        maxWidth: 110,
-      },
+      field: "LocalHousing",
+      headerName: "לבני מקום",
+      minWidth: 110,
+      maxWidth: 110,
+    },
     {
       cellRenderer: Registrants,
       headerName: "נרשמו",
