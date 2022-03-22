@@ -1,7 +1,12 @@
 import { useCallback, useContext } from "react";
 import { RowDataContext } from "./App";
 import ReplayIcon from "@mui/icons-material/Replay";
-import { fetchNewData, formatNumber } from "./utils";
+import {
+  calculateChancesPerRow,
+  fetchNewData,
+  formatNumber,
+  formatPercentage,
+} from "./utils";
 
 export function Registration({ data }) {
   const url = `https://www.dira.moch.gov.il/${data.ProjectNumber}/${data.LotteryNumber}/ProjectInfo`;
@@ -14,9 +19,12 @@ export function Registration({ data }) {
   );
 }
 
-
-
-function RegistrantsImpl({ data, fieldName }) {
+function RegistrantsImpl({
+  data,
+  fieldName,
+  formatter = formatNumber,
+  title = "לחץ לעדכון",
+}) {
   const { updateForLotteryNumber } = useContext(RowDataContext);
   const update = useCallback(async () => {
     const response = await fetchNewData({
@@ -25,12 +33,15 @@ function RegistrantsImpl({ data, fieldName }) {
     });
     data._registrants = response.TotalSubscribers;
     data._localRegistrants = response.TotalLocalSubscribers;
+    const { chances, localChances } = calculateChancesPerRow(data);
+    data.chances = chances;
+    data.localChances = localChances;
     updateForLotteryNumber(data.LotteryNumber, data);
   }, [data, updateForLotteryNumber]);
   if (data[fieldName]) {
     return (
-      <div onClick={update} className="dataCell" title="לחץ לעדכון">
-        <span>{formatNumber(data[fieldName])}</span>
+      <div onClick={update} className="dataCell" title={title}>
+        <span>{formatter(data[fieldName])}</span>
         <ReplayIcon className="fetchIconInner" title="עדכן" />
       </div>
     );
@@ -49,4 +60,26 @@ export function Registrants({ data }) {
 
 export function LocalRegistrants({ data }) {
   return <RegistrantsImpl data={data} fieldName="_localRegistrants" />;
+}
+
+export function Chances({ data }) {
+  return (
+    <RegistrantsImpl
+      data={data}
+      fieldName="chances"
+      formatter={formatPercentage}
+      title="סיכוי משוער"
+    />
+  );
+}
+
+export function LocalChances({ data }) {
+  return (
+    <RegistrantsImpl
+      data={data}
+      fieldName="localChances"
+      formatter={formatPercentage}
+      title="סיכוי משוער"
+    />
+  );
 }

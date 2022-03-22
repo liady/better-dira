@@ -8,6 +8,19 @@
 .ag-theme-alpine .ag-header-cell-label {
   color: white;
 }
+.ag-theme-alpine .ag-header-cell-text {
+  overflow: hidden;
+  text-overflow: unset;
+  white-space: break-spaces;
+  overflow-wrap: anywhere;
+  word-break: unset;
+}
+
+[col-id="chances"] .ag-header-cell-text , [col-id="localChances"] .ag-header-cell-text{
+  font-size: 14px;
+  /* text-align: center; */
+}
+
 .ag-theme-alpine .ag-row.ag-row {
   font-size: 16px;
 }

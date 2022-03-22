@@ -7,7 +7,12 @@ import React, {
 } from "react";
 import rawData from "./data.json";
 import localData from "./localData.json";
-import { enrichData, fetchAllSubscribers, getCities } from "./utils";
+import {
+  calculateChances,
+  enrichData,
+  fetchAllSubscribers,
+  getCities,
+} from "./utils";
 import "./App.css";
 import { AgGridReact } from "ag-grid-react";
 
@@ -23,17 +28,25 @@ const data = enrichData(rawData, localData);
 
 const App = () => {
   const [rowData, setRowData] = useState(data);
+  const [fetching, setFetching] = useState(false);
   const citiesEntries = useMemo(() => getCities(data), []);
 
   const fetchAll = useCallback(async () => {
+    if (fetching) {
+      return;
+    }
+    setFetching(true);
     const allSubscribers = await fetchAllSubscribers(data);
     setRowData(
-      rowData.map((row) => ({
-        ...row,
-        ...allSubscribers[row.LotteryNumber],
-      }))
+      calculateChances(
+        rowData.map((row) => ({
+          ...row,
+          ...allSubscribers[row.LotteryNumber],
+        }))
+      )
     );
-  }, [rowData]);
+    setFetching(false);
+  }, [rowData, fetching]);
 
   window.fetchAll = fetchAll;
 
@@ -56,6 +69,7 @@ const App = () => {
   const defaultColDef = {
     sortable: true,
   };
+
   const [columnDefs] = useState(getColumnDefs());
   const gridRef = useRef();
   const autoSizeAll = useCallback(() => {
@@ -130,7 +144,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      <label className="subtitle">
+      <label className="subtitle" onClick={fetchAll}>
         אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
       </label>
     </div>
