@@ -198,7 +198,6 @@ export function caluclateOddsforGeneral() {
   const localAprartments = 51
   const disabledApts = 3
   const totalRegs= 3526
-  const localRegs= 438
   //apartments left after local distribution / total registrations- local apts. won in local raffle.
   const oddsForGeneral= (apartments-disabledApts-localAprartments)/(totalRegs-localAprartments)
   return oddsForGeneral*100 //times 100 for% and not odds.
