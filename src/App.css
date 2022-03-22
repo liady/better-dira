@@ -12,8 +12,7 @@
 }
 
 [col-id="chances"] .ag-header-cell-text,
-[col-id="localChances"] .ag-header-cell-text,
-[col-id="LocalHousing"] .ag-header-cell-text {
+[col-id="localChances"] .ag-header-cell-text {
   font-size: 14px;
   overflow: hidden;
   text-overflow: unset;
