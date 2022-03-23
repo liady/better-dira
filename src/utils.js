@@ -1,10 +1,4 @@
-import {
-  Chances,
-  LocalChances,
-  LocalRegistrants,
-  Registrants,
-  Registration,
-} from "./Renderers";
+import { Registration } from "./Renderers";
 
 const currencyFormatter = new Intl.NumberFormat("he-IL", {
   style: "currency",
@@ -45,17 +39,7 @@ export function getCities(data) {
   return [...citiesMap.entries()];
 }
 
-export function enrichData(rawData, localData) {
-  return rawData.map((lottery) => {
-    const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
-    return {
-      ...lottery,
-      LocalHousing,
-    };
-  });
-}
-
-export async function fetchNewData({ project, lottery }) {
+export async function fetchRegistrantsData({ project, lottery }) {
   const resp = await fetch(
     `https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26PageNumber%3D1%26PageSize%3D12%26ProjectNumber%3D${project}%26LotteryNumber%3D${lottery}%26`,
     {
@@ -73,82 +57,70 @@ export async function fetchNewData({ project, lottery }) {
     }
   );
   const json = await resp.json();
-  const { TotalLocalSubscribers, TotalSubscribers } =
-    json.ProjectItems[0].LotteryStageSummery;
+  const { TotalLocalSubscribers, TotalSubscribers } = json.ProjectItems[0].LotteryStageSummery;
   return {
-    TotalLocalSubscribers,
-    TotalSubscribers,
+    _registrants: TotalSubscribers,
+    _localRegistrants: TotalLocalSubscribers,
   };
 }
 
-export function calculateChancesPerRow(row) {
+export function enrichData(rawData, localData) {
+  return rawData.map((lottery) => {
+    const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
+    return {
+      ...lottery,
+      LocalHousing,
+    };
+  });
+}
+
+export function calculateChance(row) {
   const {
     LotteryApparmentsNum,
     LocalHousing,
-    _localRegistrants = 0,
-    _registrants = 0,
-  } = row;
+    _localRegistrants,
+    _registrants,
+  } = row.data;
+
+  if (_localRegistrants == null || _registrants == null) {
+    return null;
+  }
+
+  const localHanded = Math.min(LocalHousing, _localRegistrants);
+
+  const chancesForNonLocalToGetNonLocalHousing = _registrants
+    ? Math.min((LotteryApparmentsNum - localHanded) / (_registrants - localHanded), 1): 0;
+
+  return chancesForNonLocalToGetNonLocalHousing;
+}
+
+export function calculateLocalChance(row) {
+  const {
+    LotteryApparmentsNum,
+    LocalHousing,
+    _localRegistrants,
+    _registrants,
+  } = row.data;
+
+  if (_localRegistrants == null || _registrants == null) {
+    return null;
+  }
 
   const localHanded = Math.min(LocalHousing, _localRegistrants);
 
   const chancesForALocalToGetLocalHousing = _localRegistrants
-    ? Math.min(localHanded / _localRegistrants, 1)
-    : 0;
+    ? Math.min(localHanded / _localRegistrants, 1): 0;
 
-  const chancesForNonLocalToGetNonLocalHousing = _registrants
-    ? Math.min(
-        (LotteryApparmentsNum - localHanded) / (_registrants - localHanded),
-        1
-      )
-    : 0;
+    const chancesForNonLocalToGetNonLocalHousing = _registrants
+    ? Math.min((LotteryApparmentsNum - localHanded) / (_registrants - localHanded), 1): 0;
 
-  const localChances =
-    chancesForALocalToGetLocalHousing +
-    (1 - chancesForALocalToGetLocalHousing) *
-      chancesForNonLocalToGetNonLocalHousing;
+  const localChances = chancesForALocalToGetLocalHousing + (1 - chancesForALocalToGetLocalHousing) *
+    chancesForNonLocalToGetNonLocalHousing;
 
-  return {
-    ...row,
-    localChances,
-    chances: chancesForNonLocalToGetNonLocalHousing,
-  };
+  return localChances;
 }
 
-export function calculateChances(rowData) {
-  return rowData.map(calculateChancesPerRow);
-}
 
-export async function fetchAllSubscribers(data) {
-  const lotteries = data.map((row) => ({
-    project: row.ProjectNumber,
-    lottery: row.LotteryNumber,
-  }));
-  const chunksOfSix = lotteries.reduce((acc, cur, i) => {
-    if (i % 10 === 0) {
-      acc.push([]);
-    }
-    acc[acc.length - 1].push(cur);
-    return acc;
-  }, []);
-  let res = [];
-  for (let i = 0; i < chunksOfSix.length; i++) {
-    const lotteries = chunksOfSix[i];
-    const result = await Promise.all(
-      lotteries.map(async ({ project, lottery }) => {
-        const subscribers = await fetchNewData({ project, lottery });
-        return [
-          lottery,
-          {
-            _registrants: subscribers.TotalSubscribers,
-            _localRegistrants: subscribers.TotalLocalSubscribers,
-          },
-        ];
-      })
-    );
-    res = res.concat(result);
-  }
-  return Object.fromEntries(res);
-}
 
 export function getColumnDefs() {
   return [
@@ -197,20 +169,18 @@ export function getColumnDefs() {
       maxWidth: 100,
     },
     {
-      field: "LocalHousing",
-      headerName: "לבני מקום",
-      minWidth: 110,
-      maxWidth: 110,
-    },
+        field: "LocalHousing",
+        headerName: "לבני מקום",
+        minWidth: 110,
+        maxWidth: 110,
+      },
     {
-      cellRenderer: Registrants,
       headerName: "נרשמו",
       minWidth: 90,
       maxWidth: 90,
       field: "_registrants",
     },
     {
-      cellRenderer: LocalRegistrants,
       headerName: "בני מקום",
       minWidth: 110,
       maxWidth: 110,
@@ -221,14 +191,16 @@ export function getColumnDefs() {
       minWidth: 105,
       maxWidth: 105,
       field: "chances",
-      cellRenderer: Chances,
+      valueGetter: calculateChance,
+      valueFormatter: ({value}) => value ? formatPercentage(value) : "",
     },
     {
       headerName: "סיכוי לבן-מקום",
       minWidth: 120,
       maxWidth: 120,
       field: "localChances",
-      cellRenderer: LocalChances,
+      valueGetter: calculateLocalChance,
+      valueFormatter: ({value}) => value ? formatPercentage(value) : "",
     },
     {
       cellRenderer: Registration,
