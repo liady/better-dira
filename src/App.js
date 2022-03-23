@@ -33,7 +33,7 @@ const data = enrichData(rawData, localData);
 const App = () => {
   const [rowData, setRowData] = useState(data);
   const [fetching, setFetching] = useState(false);
-  const [refreshed, setRefreshed] = useState(false);
+  const [setRefreshed] = useState(false);
   const [grouped, setGrouped] = useState(false);
   const citiesEntries = useMemo(() => getCities(data), []);
 
