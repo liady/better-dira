@@ -15,6 +15,7 @@ import {
 } from "./utils";
 import "./App.css";
 import { AgGridReact } from "ag-grid-react";
+import RingLoader from "react-spinners/RingLoader";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -119,6 +120,15 @@ const App = () => {
           >
             מפת ההגרלות
           </a>
+          <div className={`refreshAllContainer ${fetching ? "fetching" : ""}`}>
+            {fetching ? <RingLoader size={18} /> : null}
+            <button
+              className={`refreshAll ${fetching ? "fetching-button" : ""}`}
+              onClick={fetchAll}
+            >
+              רענן את כל הנתונים (כ10 שניות)
+            </button>
+          </div>
         </div>
         <div className="table-container">
           <div
