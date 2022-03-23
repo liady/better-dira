@@ -83,7 +83,7 @@ export function calculateChance(row) {
   } = row.data;
 
   if (_localRegistrants == null || _registrants == null) {
-    return "";
+    return null;
   }
 
   const localHanded = Math.min(LocalHousing, _localRegistrants);
@@ -103,7 +103,7 @@ export function calculateLocalChance(row) {
   } = row.data;
 
   if (_localRegistrants == null || _registrants == null) {
-    return "";
+    return null;
   }
 
   const localHanded = Math.min(LocalHousing, _localRegistrants);
@@ -192,7 +192,7 @@ export function getColumnDefs() {
       maxWidth: 105,
       field: "chances",
       valueGetter: calculateChance,
-      valueFormatter: ({value}) => formatPercentage(value),
+      valueFormatter: ({value}) => value ? formatPercentage(value) : "",
     },
     {
       headerName: "סיכוי לבן-מקום",
@@ -200,7 +200,7 @@ export function getColumnDefs() {
       maxWidth: 120,
       field: "localChances",
       valueGetter: calculateLocalChance,
-      valueFormatter: ({value}) => formatPercentage(value),
+      valueFormatter: ({value}) => value ? formatPercentage(value) : "",
     },
     {
       cellRenderer: Registration,
