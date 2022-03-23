@@ -1,4 +1,4 @@
-import { Registration } from "./Renderers";
+import { Registration, LoadableCell } from "./Renderers";
 
 const currencyFormatter = new Intl.NumberFormat("he-IL", {
   style: "currency",
@@ -179,12 +179,16 @@ export function getColumnDefs() {
       minWidth: 90,
       maxWidth: 90,
       field: "_registrants",
+      cellRenderer: LoadableCell
+
     },
     {
       headerName: "בני מקום",
       minWidth: 110,
       maxWidth: 110,
       field: "_localRegistrants",
+      cellRenderer: LoadableCell
+
     },
     {
       headerName: "סיכוי לחיצוני",
@@ -193,6 +197,7 @@ export function getColumnDefs() {
       field: "chances",
       valueGetter: calculateChance,
       valueFormatter: ({value}) => value ? formatPercentage(value) : "",
+      cellRenderer: LoadableCell
     },
     {
       headerName: "סיכוי לבן-מקום",
@@ -201,6 +206,7 @@ export function getColumnDefs() {
       field: "localChances",
       valueGetter: calculateLocalChance,
       valueFormatter: ({value}) => value ? formatPercentage(value) : "",
+      cellRenderer: LoadableCell,
     },
     {
       cellRenderer: Registration,

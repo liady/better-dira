@@ -1,3 +1,5 @@
+import { RingLoader } from "react-spinners";
+
 export function Registration({ data }) {
   const url = `https://www.dira.moch.gov.il/${data.ProjectNumber}/${data.LotteryNumber}/ProjectInfo`;
   return (
@@ -9,3 +11,11 @@ export function Registration({ data }) {
   );
 }
 
+export function LoadableCell({ value, formatValue }) {
+  if (value) {
+    return <div>{formatValue(value)}</div>;
+  } else {
+    return <RingLoader size={18} />
+
+  }
+}
