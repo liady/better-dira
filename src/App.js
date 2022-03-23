@@ -65,7 +65,6 @@ const data = enrichData(rawData, localData);
 
 const App = () => {
   const [rowData, setRowData] = useState(data);
-  const [fetching, setFetching] = useState(false);
   const citiesEntries = useMemo(() => getCities(data), []);
   const fetchQueue = useRef(new Set());
 
