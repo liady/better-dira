@@ -57,7 +57,7 @@ const App = () => {
     );
     setFetching(false);
     setRefreshed(true);
-  }, [rowData, fetching]);
+  }, [fetching, rowData, setRefreshed]);
 
   window.fetchAll = fetchAll;
 
