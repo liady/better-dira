@@ -25,19 +25,24 @@ function RegistrantsImpl({
   formatter = formatNumber,
   title = "לחץ לעדכון",
 }) {
-  const { updateForLotteryNumber } = useContext(RowDataContext);
+  const { updateForLotteryNumber, grouped, fetchAll } =
+    useContext(RowDataContext);
   const update = useCallback(async () => {
-    const response = await fetchNewData({
-      project: data.ProjectNumber,
-      lottery: data.LotteryNumber,
-    });
-    data._registrants = response.TotalSubscribers;
-    data._localRegistrants = response.TotalLocalSubscribers;
-    const { chances, localChances } = calculateChancesPerRow(data);
-    data.chances = chances;
-    data.localChances = localChances;
-    updateForLotteryNumber(data.LotteryNumber, data);
-  }, [data, updateForLotteryNumber]);
+    if (grouped) {
+      fetchAll();
+    } else {
+      const response = await fetchNewData({
+        project: data.ProjectNumber,
+        lottery: data.LotteryNumber,
+      });
+      data._registrants = response.TotalSubscribers;
+      data._localRegistrants = response.TotalLocalSubscribers;
+      const { chances, localChances } = calculateChancesPerRow(data);
+      data.chances = chances;
+      data.localChances = localChances;
+      updateForLotteryNumber(data.LotteryNumber, data);
+    }
+  }, [data, fetchAll, grouped, updateForLotteryNumber]);
   if (data[fieldName]) {
     return (
       <div onClick={update} className="dataCell" title={title}>

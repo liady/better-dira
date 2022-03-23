@@ -150,92 +150,194 @@ export async function fetchAllSubscribers(data) {
   return Object.fromEntries(res);
 }
 
-export function getColumnDefs() {
-  return [
-    { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
-    { field: "ProjectNumber", headerName: "מתחם", minWidth: 85, maxWidth: 85 },
-    {
-      field: "CityDescription",
-      headerName: "עיר",
-      minWidth: 120,
-      maxWidth: 120,
-      filter: "agTextColumnFilter",
-    },
-    {
-      field: "ProjectName",
-      headerName: "פרויקט",
-      maxWidth: 200,
-      resizable: true,
-      minWidth: 90,
-    },
-    {
-      field: "ContractorDescription",
-      headerName: "קבלן",
-      maxWidth: 300,
-      resizable: true,
-      minWidth: 90,
-    },
-    {
-      field: "PricePerUnit",
-      headerName: 'מחיר למ"ר',
-      minWidth: 120,
-      maxWidth: 120,
-      cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
-    },
-    {
-      field: "GrantSize",
-      headerName: "מענק",
-      minWidth: 120,
-      maxWidth: 120,
-      cellRenderer: (params) => formatCurrency(params.data.GrantSize),
-    },
+export const nonGroupedColumnDefs = [
+  { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
+  { field: "ProjectNumber", headerName: "מתחם", minWidth: 85, maxWidth: 85 },
+  {
+    field: "CityDescription",
+    headerName: "עיר",
+    minWidth: 120,
+    maxWidth: 120,
+    filter: "agTextColumnFilter",
+  },
+  {
+    field: "ProjectName",
+    headerName: "פרויקט",
+    maxWidth: 200,
+    resizable: true,
+    minWidth: 90,
+  },
+  {
+    field: "ContractorDescription",
+    headerName: "קבלן",
+    maxWidth: 300,
+    resizable: true,
+    minWidth: 90,
+  },
+  {
+    field: "PricePerUnit",
+    headerName: 'מחיר למ"ר',
+    minWidth: 120,
+    maxWidth: 120,
+    cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
+  },
+  {
+    field: "GrantSize",
+    headerName: "מענק",
+    minWidth: 120,
+    maxWidth: 120,
+    cellRenderer: (params) => formatCurrency(params.data.GrantSize),
+  },
 
-    {
-      field: "LotteryApparmentsNum",
-      headerName: "דירות",
-      minWidth: 100,
-      maxWidth: 100,
-    },
-    {
-      field: "LocalHousing",
-      headerName: "לבני מקום",
-      minWidth: 110,
-      maxWidth: 110,
-    },
-    {
-      cellRenderer: Registrants,
-      headerName: "נרשמו",
-      minWidth: 90,
-      maxWidth: 90,
-      field: "_registrants",
-    },
-    {
-      cellRenderer: LocalRegistrants,
-      headerName: "בני מקום",
-      minWidth: 110,
-      maxWidth: 110,
-      field: "_localRegistrants",
-    },
-    {
-      headerName: "סיכוי לחיצוני",
-      minWidth: 105,
-      maxWidth: 105,
-      field: "chances",
-      cellRenderer: Chances,
-    },
-    {
-      headerName: "סיכוי לבן-מקום",
-      minWidth: 120,
-      maxWidth: 120,
-      field: "localChances",
-      cellRenderer: LocalChances,
-    },
-    {
-      cellRenderer: Registration,
-      minWidth: 150,
-      maxWidth: 150,
-      sortable: false,
-      resizable: false,
-    },
-  ];
+  {
+    field: "LotteryApparmentsNum",
+    headerName: "דירות",
+    minWidth: 100,
+    maxWidth: 100,
+  },
+  {
+    field: "LocalHousing",
+    headerName: "לבני מקום",
+    minWidth: 110,
+    maxWidth: 110,
+  },
+  {
+    cellRenderer: Registrants,
+    headerName: "נרשמו",
+    minWidth: 90,
+    maxWidth: 90,
+    field: "_registrants",
+  },
+  {
+    cellRenderer: LocalRegistrants,
+    headerName: "בני מקום",
+    minWidth: 110,
+    maxWidth: 110,
+    field: "_localRegistrants",
+  },
+  {
+    headerName: "סיכוי לחיצוני",
+    minWidth: 105,
+    maxWidth: 105,
+    field: "chances",
+    cellRenderer: Chances,
+  },
+  {
+    headerName: "סיכוי לבן-מקום",
+    minWidth: 120,
+    maxWidth: 120,
+    field: "localChances",
+    cellRenderer: LocalChances,
+  },
+  {
+    cellRenderer: Registration,
+    minWidth: 150,
+    maxWidth: 150,
+    sortable: false,
+    resizable: false,
+  },
+];
+
+export const groupedColumnDefs = [
+  {
+    field: "CityDescription",
+    headerName: "עיר",
+    minWidth: 120,
+    // maxWidth: 120,
+    filter: "agTextColumnFilter",
+  },
+  {
+    field: "PricePerUnit",
+    headerName: 'מחיר ממוצע למ"ר',
+    minWidth: 170,
+    // maxWidth: 170,
+    cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
+  },
+  {
+    field: "GrantSize",
+    headerName: "מענק ממוצע",
+    minWidth: 140,
+    // maxWidth: 140,
+    cellRenderer: (params) => formatCurrency(params.data.GrantSize),
+  },
+
+  {
+    field: "LotteryApparmentsNum",
+    headerName: 'סה"כ דירות',
+    minWidth: 120,
+    // maxWidth: 120,
+  },
+  {
+    field: "LocalHousing",
+    headerName: 'סה"כ לבני מקום',
+    minWidth: 160,
+    // maxWidth: 160,
+  },
+  {
+    cellRenderer: Registrants,
+    headerName: "ממוצע נרשמים",
+    minWidth: 160,
+    // maxWidth: 160,
+    field: "_registrants",
+  },
+  {
+    cellRenderer: LocalRegistrants,
+    headerName: "ממוצע בני מקום",
+    minWidth: 170,
+    // maxWidth: 170,
+    field: "_localRegistrants",
+  },
+  {
+    headerName: "סיכוי משוער לחיצוני",
+    minWidth: 145,
+    // maxWidth: 145,
+    field: "chances",
+    cellRenderer: Chances,
+  },
+  {
+    headerName: "סיכוי משוער לבן-מקום",
+    minWidth: 150,
+    // maxWidth: 150,
+    field: "localChances",
+    cellRenderer: LocalChances,
+  },
+];
+
+export function groupRowsByCity(rowData) {
+  const grouped = rowData.reduce((acc, cur) => {
+    const city = cur.CityDescription;
+    if (!acc[city]) {
+      acc[city] = [];
+    }
+    acc[city].push(cur);
+    return acc;
+  }, {});
+  return Object.entries(grouped).map(([key, value]) => {
+    const row = {
+      CityDescription: key,
+      GrantSize:
+        value.reduce((acc, cur) => acc + cur.GrantSize, 0) / value.length,
+      PricePerUnit:
+        value.reduce((acc, cur) => acc + cur.PricePerUnit, 0) / value.length,
+      ContractorDescription: "",
+      ProjectName: "",
+      LotteryApparmentsNum: value.reduce(
+        (acc, cur) => acc + cur.LotteryApparmentsNum,
+        0
+      ),
+      LocalHousing: value.reduce((acc, cur) => acc + cur.LocalHousing, 0),
+      _registrants: value?.length
+        ? Math.round(
+            value.reduce((acc, cur) => acc + cur._registrants, 0) / value.length
+          )
+        : 0,
+      _localRegistrants: value?.length
+        ? Math.round(
+            value.reduce((acc, cur) => acc + cur._localRegistrants, 0) /
+              value.length
+          )
+        : 0,
+    };
+    return calculateChancesPerRow(row);
+  });
 }

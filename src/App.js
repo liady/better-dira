@@ -12,15 +12,18 @@ import {
   enrichData,
   fetchAllSubscribers,
   getCities,
+  groupRowsByCity,
+  nonGroupedColumnDefs,
+  groupedColumnDefs,
 } from "./utils";
 import "./App.css";
+import Switch from "@mui/material/Switch";
 import { AgGridReact } from "ag-grid-react";
 import RingLoader from "react-spinners/RingLoader";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-import { getColumnDefs } from "./utils";
 import Dropdown from "./Dropdown";
 
 export const RowDataContext = React.createContext();
@@ -30,7 +33,13 @@ const data = enrichData(rawData, localData);
 const App = () => {
   const [rowData, setRowData] = useState(data);
   const [fetching, setFetching] = useState(false);
+  const [refreshed, setRefreshed] = useState(false);
+  const [grouped, setGrouped] = useState(false);
   const citiesEntries = useMemo(() => getCities(data), []);
+
+  const groupedRowData = useMemo(() => {
+    return groupRowsByCity(rowData);
+  }, [rowData]);
 
   const fetchAll = useCallback(async () => {
     if (fetching) {
@@ -47,9 +56,14 @@ const App = () => {
       )
     );
     setFetching(false);
+    setRefreshed(true);
   }, [rowData, fetching]);
 
   window.fetchAll = fetchAll;
+
+  const toggleGroup = useCallback((event) => {
+    setGrouped(event.target.checked);
+  }, []);
 
   const updateForLotteryNumber = useCallback(
     (lotteryNumber, newData) => {
@@ -71,7 +85,6 @@ const App = () => {
     sortable: true,
   };
 
-  const [columnDefs] = useState(getColumnDefs());
   const gridRef = useRef();
   const autoSizeAll = useCallback(() => {
     // const allColumnIds = [];
@@ -136,7 +149,7 @@ const App = () => {
             style={{ width: "100%", height: "100%" }}
           >
             <RowDataContext.Provider
-              value={{ rowData, updateForLotteryNumber }}
+              value={{ rowData, updateForLotteryNumber, grouped, fetchAll }}
             >
               <AgGridReact
                 suppressCellSelection={true}
@@ -145,15 +158,22 @@ const App = () => {
                 // domLayout="autoHeight"
                 defaultColDef={defaultColDef}
                 enableRtl={true}
-                rowData={rowData}
-                columnDefs={columnDefs}
+                rowData={grouped ? groupedRowData : rowData}
+                columnDefs={grouped ? groupedColumnDefs : nonGroupedColumnDefs}
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
+                onRowDataChanged={autoSizeAll}
               ></AgGridReact>
             </RowDataContext.Provider>
           </div>
         </div>
+        <div className="selectorContainer">
+          <label>לפי עיר</label>
+          <Switch onChange={toggleGroup} checked={grouped} />
+          <label>לפי הגרלה</label>
+        </div>
       </div>
+
       <label className="subtitle" onClick={fetchAll}>
         אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
       </label>
