@@ -122,6 +122,9 @@
   margin-right: 8px;
   opacity: 0.25;
 }
+.fetchingInner {
+  margin-right: 8px;
+}
 
 .dataCell:hover .fetchIconInner {
   opacity: 1;
@@ -193,8 +196,8 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-    width: 100%;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 5px;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 5px;
 }

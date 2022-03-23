@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { RowDataContext } from "./App";
 import ReplayIcon from "@mui/icons-material/Replay";
 import {
@@ -7,6 +7,7 @@ import {
   formatNumber,
   formatPercentage,
 } from "./utils";
+import { RingLoader } from "react-spinners";
 
 export function Registration({ data }) {
   const url = `https://www.dira.moch.gov.il/${data.ProjectNumber}/${data.LotteryNumber}/ProjectInfo`;
@@ -25,11 +26,14 @@ function RegistrantsImpl({
   formatter = formatNumber,
   title = "לחץ לעדכון",
 }) {
+  const [fetching, setFetching] = useState(false);
   const { updateForLotteryNumber, grouped, fetchAll } =
     useContext(RowDataContext);
   const update = useCallback(async () => {
     if (grouped) {
-      fetchAll();
+      setFetching(true);
+      await fetchAll();
+      setFetching(false);
     } else {
       const response = await fetchNewData({
         project: data.ProjectNumber,
@@ -53,7 +57,11 @@ function RegistrantsImpl({
   } else {
     return (
       <div onClick={update} className="dataCell" title="לחץ לעדכון">
-        <ReplayIcon className="fetchIcon" title="עדכן" />
+        {fetching ? (
+          <RingLoader size={18} />
+        ) : (
+          <ReplayIcon className="fetchIcon" title="עדכן" />
+        )}
       </div>
     );
   }
