@@ -10,6 +10,16 @@ const numberFormatter = new Intl.NumberFormat("he-IL", {
   style: "decimal",
   maximumFractionDigits: 0,
 });
+
+const percentageFormatter = new Intl.NumberFormat("he-IL", {
+  style: "percent",
+  maximumFractionDigits: 2,
+});
+
+export function formatPercentage(value) {
+  return percentageFormatter.format(value);
+}
+
 export function formatCurrency(number) {
   return currencyFormatter.format(number);
 }
@@ -63,6 +73,53 @@ export function enrichData(rawData, localData) {
     };
   });
 }
+
+export function calculateChance(row) {
+  const {
+    LotteryApparmentsNum,
+    LocalHousing,
+    _localRegistrants,
+    _registrants,
+  } = row.data;
+
+  if (_localRegistrants == null || _registrants == null) {
+    return "";
+  }
+
+  const localHanded = Math.min(LocalHousing, _localRegistrants);
+
+  const chancesForNonLocalToGetNonLocalHousing = _registrants
+    ? Math.min((LotteryApparmentsNum - localHanded) / (_registrants - localHanded), 1): 0;
+
+  return chancesForNonLocalToGetNonLocalHousing;
+}
+
+export function calculateLocalChance(row) {
+  const {
+    LotteryApparmentsNum,
+    LocalHousing,
+    _localRegistrants,
+    _registrants,
+  } = row.data;
+
+  if (_localRegistrants == null || _registrants == null) {
+    return "";
+  }
+
+  const localHanded = Math.min(LocalHousing, _localRegistrants);
+
+  const chancesForALocalToGetLocalHousing = _localRegistrants
+    ? Math.min(localHanded / _localRegistrants, 1): 0;
+
+    const chancesForNonLocalToGetNonLocalHousing = _registrants
+    ? Math.min((LotteryApparmentsNum - localHanded) / (_registrants - localHanded), 1): 0;
+
+  const localChances = chancesForALocalToGetLocalHousing + (1 - chancesForALocalToGetLocalHousing) *
+    chancesForNonLocalToGetNonLocalHousing;
+
+  return localChances;
+}
+
 
 
 export function getColumnDefs() {
@@ -118,20 +175,33 @@ export function getColumnDefs() {
         maxWidth: 110,
       },
     {
-      //cellRenderer: Registrants,
       headerName: "נרשמו",
       minWidth: 90,
       maxWidth: 90,
       field: "_registrants",
     },
     {
-      //cellRenderer: LocalRegistrants,
       headerName: "בני מקום",
       minWidth: 110,
       maxWidth: 110,
       field: "_localRegistrants",
     },
-
+    {
+      headerName: "סיכוי לחיצוני",
+      minWidth: 105,
+      maxWidth: 105,
+      field: "chances",
+      valueGetter: calculateChance,
+      valueFormatter: ({value}) => formatPercentage(value),
+    },
+    {
+      headerName: "סיכוי לבן-מקום",
+      minWidth: 120,
+      maxWidth: 120,
+      field: "localChances",
+      valueGetter: calculateLocalChance,
+      valueFormatter: ({value}) => formatPercentage(value),
+    },
     {
       cellRenderer: Registration,
       minWidth: 150,

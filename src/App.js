@@ -7,14 +7,18 @@ import React, {
 } from "react";
 import rawData from "./data.json";
 import localData from "./localData.json";
-import { enrichData, getCities } from "./utils";
+import { 
+  enrichData,
+  getCities,
+  getColumnDefs,
+  fetchRegistrantsData
+} from "./utils";
 import "./App.css";
 import { AgGridReact } from "ag-grid-react";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-import { getColumnDefs, fetchRegistrantsData } from "./utils";
 import Dropdown from "./Dropdown";
 
 window.fetchAll = async function () {
@@ -61,9 +65,9 @@ const data = enrichData(rawData, localData);
 
 const App = () => {
   const [rowData, setRowData] = useState(data);
+  const [fetching, setFetching] = useState(false);
   const citiesEntries = useMemo(() => getCities(data), []);
   const fetchQueue = useRef(new Set());
-
 
   const updateForLotteryNumber = useCallback(
     (lotteryNumber, newData) => {
@@ -84,6 +88,7 @@ const App = () => {
   const defaultColDef = {
     sortable: true,
   };
+
   const [columnDefs] = useState(getColumnDefs());
   const gridRef = useRef();
   const autoSizeAll = useCallback(() => {
@@ -119,7 +124,6 @@ const App = () => {
 
   const onVisibleRowsChange = async (params) => {
     const gridApi = params.api;
-    console.log("hi");
     if (!gridApi) {
       return;
     }
@@ -196,9 +200,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      <label className="subtitle">
-        אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
-      </label>
+
     </div>
   );
 };
