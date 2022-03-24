@@ -202,14 +202,18 @@
 .selectorContainer {
   font-size: 16px;
   font-weight: 400;
-  margin-inline-start: 10px;
+  /* margin-inline-start: 10px; */
   display: flex;
-  max-width: 1700px;
+  /* max-width: 1700px; */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  width: 100%;
+  /* width: 100%; */
   justify-content: flex-end;
   align-items: center;
-  margin-top: 5px;
+  /* margin-top: 5px; */
+  align-self: flex-end;
+  margin-bottom: -7px;
+  margin-right: 15px;
+  margin-right: auto;
 }

@@ -149,6 +149,11 @@ const App = () => {
               לחצו לרענן את כל הנתונים (כ10 שניות)
             </button>
           </div>
+          <div className="selectorContainer">
+          <label>קבץ לפי עיר</label>
+          <Switch onChange={toggleGroup} checked={grouped} />
+          <label>הצג לפי הגרלה</label>
+        </div>
         </div>
         <div className="table-container">
           <div
@@ -173,11 +178,6 @@ const App = () => {
               ></AgGridReact>
             </RowDataContext.Provider>
           </div>
-        </div>
-        <div className="selectorContainer">
-          <label>קבץ לפי עיר</label>
-          <Switch onChange={toggleGroup} checked={grouped} />
-          <label>הצג לפי הגרלה</label>
         </div>
       </div>
 
