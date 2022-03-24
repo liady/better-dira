@@ -5,8 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import rawData from "./data.json";
-import localData from "./localData.json";
+import rawData from "./data/data.json";
+import localData from "./data/localData.json";
+import populationData from "./data/population.json";
 import {
   calculateChances,
   enrichData,
@@ -28,7 +29,7 @@ import Dropdown from "./Dropdown";
 
 export const RowDataContext = React.createContext();
 
-const data = enrichData(rawData, localData);
+const data = enrichData(rawData, localData, populationData);
 
 const App = () => {
   useEffect(() => {

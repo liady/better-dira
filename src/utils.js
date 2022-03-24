@@ -45,14 +45,33 @@ export function getCities(data) {
   return [...citiesMap.entries()];
 }
 
-export function enrichData(rawData, localData) {
-  return rawData.map((lottery) => {
+export function enrichData(rawData, localData, populationData) {
+  const allRows = rawData.map((lottery) => {
     const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
+    const { totalPopulation: totalPopulationStr = "0" } =
+      populationData["" + lottery.CityCode] || {};
+    const totalPopulation = parseInt(totalPopulationStr.replace(/,/g, ""));
     return {
       ...lottery,
       LocalHousing,
+      totalPopulation,
     };
   });
+  const populationSet = new Set();
+  allRows.forEach((lottery) => populationSet.add(lottery.totalPopulation));
+  const populationArray = [...populationSet];
+  populationArray.sort((a, b) => b - a);
+  const populationIndexObject = populationArray.reduce(
+    (acc, population, index) => {
+      acc[population] = index + 1;
+      return acc;
+    },
+    {}
+  );
+  allRows.forEach((lottery) => {
+    lottery.populationIndex = populationIndexObject[lottery.totalPopulation];
+  });
+  return allRows;
 }
 
 export async function fetchNewData({ project, lottery }) {
@@ -151,6 +170,7 @@ export async function fetchAllSubscribers(data) {
 }
 
 export const nonGroupedColumnDefs = [
+  // { field: "populationIndex", headerName: "סדר", minWidth: 95, maxWidth: 95 },
   { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
   { field: "ProjectNumber", headerName: "מתחם", minWidth: 85, maxWidth: 85 },
   {
@@ -239,6 +259,7 @@ export const nonGroupedColumnDefs = [
 ];
 
 export const groupedColumnDefs = [
+  { field: "populationIndex", headerName: "סדר הגרלה", minWidth: 135, maxWidth: 135 },
   {
     field: "CityDescription",
     headerName: "עיר",
@@ -337,6 +358,7 @@ export function groupRowsByCity(rowData) {
               value.length
           )
         : 0,
+        populationIndex: value.reduce((acc, cur) => acc + cur.populationIndex, 0) / value.length,
     };
     return calculateChancesPerRow(row);
   });
