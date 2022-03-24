@@ -31,6 +31,10 @@ export const RowDataContext = React.createContext();
 const data = enrichData(rawData, localData);
 
 const App = () => {
+  useEffect(() => {
+    console.log("Developed by Liad Yosef");
+    console.log("https://www.linkedin.com/in/liadyosef/");
+  }, []);
   const [rowData, setRowData] = useState(data);
   const [fetching, setFetching] = useState(false);
   const [setRefreshed] = useState(false);
