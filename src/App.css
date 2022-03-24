@@ -69,10 +69,17 @@
   text-align: center;
 }
 .subtitle {
-  margin: 15px;
   text-align: center;
+  text-decoration: none;
+  cursor: pointer;
 }
-
+.subtitleHref {
+  margin: 15px;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  color: black;
+}
 .details-button {
   text-decoration: none;
   padding: 5px 10px;
@@ -162,15 +169,20 @@
     sans-serif;
   cursor: pointer;
   font-size: 16px;
+  text-decoration: underline;
+}
+.refreshAll.fetching-button-refreshed {
+  text-decoration: none;
 }
 .refreshAll:hover {
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
 .fetching-button {
   opacity: 0.5;
+  text-decoration: none !important;
 }
 .fetching-button:hover {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 .refreshAllContainer {
   display: flex;

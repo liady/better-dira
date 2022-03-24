@@ -37,7 +37,7 @@ const App = () => {
   }, []);
   const [rowData, setRowData] = useState(data);
   const [fetching, setFetching] = useState(false);
-  const [setRefreshed] = useState(false);
+  const [refreshed, setRefreshed] = useState(false);
   const [grouped, setGrouped] = useState(false);
   const citiesEntries = useMemo(() => getCities(data), []);
 
@@ -140,10 +140,12 @@ const App = () => {
           <div className={`refreshAllContainer ${fetching ? "fetching" : ""}`}>
             {fetching ? <RingLoader size={18} /> : null}
             <button
-              className={`refreshAll ${fetching ? "fetching-button" : ""}`}
+              className={`refreshAll ${fetching ? "fetching-button" : ""} ${
+                refreshed ? "fetching-button-refreshed" : ""
+              }`}
               onClick={fetchAll}
             >
-              רענן את כל הנתונים (כ10 שניות)
+              לחצו לרענן את כל הנתונים (כ10 שניות)
             </button>
           </div>
         </div>
@@ -172,15 +174,22 @@ const App = () => {
           </div>
         </div>
         <div className="selectorContainer">
-          <label>לפי עיר</label>
+          <label>קבץ לפי עיר</label>
           <Switch onChange={toggleGroup} checked={grouped} />
-          <label>לפי הגרלה</label>
+          <label>הצג לפי הגרלה</label>
         </div>
       </div>
 
-      <label className="subtitle" onClick={fetchAll}>
-        אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
-      </label>
+      <a
+        className="subtitleHref"
+        href="https://twitter.com/liadyosef/status/1506203345375145987"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <label className="subtitle" onClick={fetchAll}>
+          אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
+        </label>
+      </a>
     </div>
   );
 };
