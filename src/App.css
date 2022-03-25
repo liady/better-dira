@@ -1,3 +1,6 @@
+a {
+  text-decoration: none;
+}
 .ag-theme-alpine .ag-header {
   background-color: #4c7fc1 !important;
   color: white;
@@ -17,7 +20,7 @@
   white-space: break-spaces;
   overflow-wrap: anywhere;
   word-break: unset;
-  /* text-align: center; */
+  text-align: center;
 }
 
 .ag-theme-alpine .ag-row.ag-row {
@@ -77,8 +80,10 @@
   margin: 15px;
   display: block;
   text-decoration: none;
-  cursor: pointer;
   color: black;
+  grid-area: disclamer;
+  text-align: center;
+  /* width: 100%; */
 }
 .details-button {
   text-decoration: none;
@@ -216,4 +221,28 @@
   margin-bottom: -7px;
   margin-right: 15px;
   margin-right: auto;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: 75px 1fr 75px;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  max-width: 1740px;
+  /* box-sizing: border-box; */
+  grid-template-areas: ". disclamer details";
+  align-items: center;
+  justify-content: center;
+}
+.twitterLink {
+  width: 16px;
+  filter: grayscale(100%);
+  transition: all 0.15s ease-in-out;
+}
+.details {
+  grid-area: details;
+}
+.details:hover .twitterLink {
+  filter: grayscale(0%);
 }

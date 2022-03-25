@@ -146,14 +146,14 @@ const App = () => {
               }`}
               onClick={fetchAll}
             >
-              לחצו לרענן את כל הנתונים (כ10 שניות)
+              לחצו כאן לרענון הנתונים (כ10 שניות)
             </button>
           </div>
           <div className="selectorContainer">
-          <label>קבץ לפי עיר</label>
-          <Switch onChange={toggleGroup} checked={grouped} />
-          <label>הצג לפי הגרלה</label>
-        </div>
+            <label>קבץ לפי עיר</label>
+            <Switch onChange={toggleGroup} checked={grouped} />
+            <label>הצג לפי הגרלה</label>
+          </div>
         </div>
         <div className="table-container">
           <div
@@ -181,16 +181,28 @@ const App = () => {
         </div>
       </div>
 
-      <a
-        className="subtitleHref"
-        href="https://twitter.com/liadyosef/status/1506203345375145987"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <label className="subtitle" onClick={fetchAll}>
-          אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
-        </label>
-      </a>
+      <div className="footer">
+        <a
+          className="subtitleHref"
+          href="https://twitter.com/liadyosef/status/1506203345375145987"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <label className="subtitle" onClick={fetchAll}>
+            אתר זה אינו אתר רשמי של משרד הבינוי והשיכון או מנהל מקרקעי ישראל
+          </label>
+        </a>
+        <div className="details">
+          <a
+            href="https://twitter.com/liadyosef"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+          <span>לפניות: </span>
+            <img className="twitterLink" src="./twitter.png" alt="liadyosef" />
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
