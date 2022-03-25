@@ -363,3 +363,33 @@ export function groupRowsByCity(rowData) {
     return calculateChancesPerRow(row);
   });
 }
+//example of odds calculation for project #1943
+//Assuming a local is participating twice, once in a local only raffle
+//2nd time in the general public raffle
+//this assumptions comes from this link:
+//https://www.gov.il/he/departments/faq/faq_dira
+//assuming all disabled apts are taken from non-locals.
+export function calculateOddsforLocal() {
+  const apartments = 102
+  const localAprartments = 51
+  const disabledApts = 3
+  const totalRegs= 3526
+  const localRegs= 438
+  const localRaffleOdds= localAprartments/localRegs
+  const generalRaffleOddsForLocals= (apartments-localAprartments-disabledApts)/(totalRegs-localAprartments)
+  const accumulatedlocalOdds= localRaffleOdds + (1-localRaffleOdds)*generalRaffleOddsForLocals
+  return accumulatedlocalOdds*100 //times 100 for % and not odds.
+}
+
+//odds for general public are more intuitive
+//assumption here is that all local apartments were given away to locals
+export function caluclateOddsforGeneral() {
+  const apartments = 102
+  const localAprartments = 51
+  const disabledApts = 3
+  const totalRegs= 3526
+  //apartments left after local distribution / total registrations- local apts. won in local raffle.
+  const oddsForGeneral= (apartments-disabledApts-localAprartments)/(totalRegs-localAprartments)
+  return oddsForGeneral*100 //times 100 for% and not odds.
+}
+
