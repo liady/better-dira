@@ -246,3 +246,27 @@ a {
 .details:hover .twitterLink {
   filter: grayscale(0%);
 }
+
+@media screen and (max-width: 600px) {
+  * {
+    font-size: 12px;
+  }
+  .title {
+    font-size: 18px;
+  }
+  .footer {
+    grid-template-columns: 1fr;
+    /* box-sizing: border-box; */
+    grid-template-areas: "disclamer";
+  }
+  .refreshAll {
+    font-size: 12px;
+  }
+  .selectorContainer {
+    max-width: 128px;
+  }
+  .refreshAllContainer.fetching {
+    height: 23px;
+    width: 30px;
+  }
+}

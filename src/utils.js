@@ -259,7 +259,12 @@ export const nonGroupedColumnDefs = [
 ];
 
 export const groupedColumnDefs = [
-  { field: "populationIndex", headerName: "סדר הגרלה", minWidth: 135, maxWidth: 135 },
+  {
+    field: "populationIndex",
+    headerName: "סדר הגרלה",
+    minWidth: 135,
+    maxWidth: 135,
+  },
   {
     field: "CityDescription",
     headerName: "עיר",
@@ -358,8 +363,13 @@ export function groupRowsByCity(rowData) {
               value.length
           )
         : 0,
-        populationIndex: value.reduce((acc, cur) => acc + cur.populationIndex, 0) / value.length,
+      populationIndex:
+        value.reduce((acc, cur) => acc + cur.populationIndex, 0) / value.length,
     };
     return calculateChancesPerRow(row);
   });
+}
+
+export function isSmallScreen() {
+  return window.innerWidth < 600;
 }
