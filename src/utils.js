@@ -1,4 +1,5 @@
 import {
+  BestChances,
   Chances,
   LocalChances,
   LocalRegistrants,
@@ -106,6 +107,7 @@ export function calculateChancesPerRow(row) {
     LocalHousing,
     _localRegistrants = 0,
     _registrants = 0,
+    maxPeopleOutOfLottery = 0,
   } = row;
 
   const localHanded = Math.min(LocalHousing, _localRegistrants);
@@ -121,6 +123,15 @@ export function calculateChancesPerRow(row) {
       )
     : 0;
 
+  const bestChancesForNonLocalToGetLocalHousing =
+    _registrants - localHanded - maxPeopleOutOfLottery > 0
+      ? Math.min(
+          (LotteryApparmentsNum - localHanded) /
+            (_registrants - localHanded - maxPeopleOutOfLottery),
+          1
+        )
+      : 1;
+
   const localChances =
     chancesForALocalToGetLocalHousing +
     (1 - chancesForALocalToGetLocalHousing) *
@@ -130,6 +141,7 @@ export function calculateChancesPerRow(row) {
     ...row,
     localChances,
     chances: chancesForNonLocalToGetNonLocalHousing,
+    bestChances: bestChancesForNonLocalToGetLocalHousing,
   };
 }
 
@@ -327,6 +339,13 @@ export const groupedColumnDefs = [
     field: "localChances",
     cellRenderer: LocalChances,
   },
+  {
+    headerName: "סיכוי מקסימלי לחיצוני",
+    minWidth: 145,
+    // maxWidth: 145,
+    field: "bestChances",
+    cellRenderer: BestChances,
+  },
 ];
 
 export function groupRowsByCity(rowData) {
@@ -338,8 +357,8 @@ export function groupRowsByCity(rowData) {
     acc[city].push(cur);
     return acc;
   }, {});
-  return Object.entries(grouped).map(([key, value]) => {
-    const row = {
+  const result = Object.entries(grouped).map(([key, value]) => {
+    return {
       CityDescription: key,
       GrantSize:
         value.reduce((acc, cur) => acc + cur.GrantSize, 0) / value.length,
@@ -365,9 +384,32 @@ export function groupRowsByCity(rowData) {
         : 0,
       populationIndex:
         value.reduce((acc, cur) => acc + cur.populationIndex, 0) / value.length,
+      maxPeopleOutOfLottery: Math.max(
+        ...value.map((row) => row.maxPeopleOutOfLottery)
+      ),
     };
-    return calculateChancesPerRow(row);
   });
+
+  const sumAllRegistrants = result.reduce(
+    (acc, cur) => acc + cur._registrants,
+    0
+  );
+
+  const resultSortedByPopulationIndex = [...result];
+  resultSortedByPopulationIndex.sort(
+    (a, b) => a.populationIndex - b.populationIndex
+  );
+
+  let totalApartments = 0;
+  let totalRegistrants = 0;
+  resultSortedByPopulationIndex.forEach((lottery) => {
+    lottery.maxPeopleOutOfLottery =
+      (totalApartments * totalRegistrants) / sumAllRegistrants;
+    totalApartments += lottery.LotteryApparmentsNum;
+    totalRegistrants += lottery._registrants;
+  });
+
+  return result.map((row) => calculateChancesPerRow(row));
 }
 
 export function isSmallScreen() {

@@ -96,3 +96,14 @@ export function LocalChances({ data }) {
     />
   );
 }
+
+export function BestChances({ data }) {
+  return (
+    <RegistrantsImpl
+      data={data}
+      fieldName="bestChances"
+      formatter={formatPercentage}
+      title="סיכוי מקסימלי משוער"
+    />
+  );
+}
