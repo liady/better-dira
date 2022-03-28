@@ -273,33 +273,6 @@ export const groupedColumnDefs = [
     filter: "agTextColumnFilter",
   },
   {
-    field: "PricePerUnit",
-    headerName: 'מחיר ממוצע למ"ר',
-    minWidth: 170,
-    // maxWidth: 170,
-    cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
-  },
-  {
-    field: "GrantSize",
-    headerName: "מענק ממוצע",
-    minWidth: 140,
-    // maxWidth: 140,
-    cellRenderer: (params) => formatCurrency(params.data.GrantSize),
-  },
-
-  {
-    field: "LotteryApparmentsNum",
-    headerName: 'סה"כ דירות',
-    minWidth: 120,
-    // maxWidth: 120,
-  },
-  {
-    field: "LocalHousing",
-    headerName: 'סה"כ לבני מקום',
-    minWidth: 160,
-    // maxWidth: 160,
-  },
-  {
     cellRenderer: Registrants,
     headerName: "ממוצע נרשמים",
     minWidth: 160,
@@ -326,6 +299,32 @@ export const groupedColumnDefs = [
     // maxWidth: 150,
     field: "localChances",
     cellRenderer: LocalChances,
+  },
+  {
+    field: "LotteryApparmentsNum",
+    headerName: 'סה"כ דירות',
+    minWidth: 120,
+    // maxWidth: 120,
+  },
+  {
+    field: "LocalHousing",
+    headerName: 'סה"כ לבני מקום',
+    minWidth: 160,
+    // maxWidth: 160,
+  },
+  {
+    field: "PricePerUnit",
+    headerName: 'מחיר ממוצע למ"ר',
+    minWidth: 170,
+    // maxWidth: 170,
+    cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
+  },
+  {
+    field: "GrantSize",
+    headerName: "מענק ממוצע",
+    minWidth: 140,
+    // maxWidth: 140,
+    cellRenderer: (params) => formatCurrency(params.data.GrantSize),
   },
 ];
 
