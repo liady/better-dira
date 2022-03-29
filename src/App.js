@@ -130,7 +130,7 @@ const App = () => {
 
   return (
     <div className={`container ${smallScreen ? "small-screen" : ""} ${grouped ? "is-grouped" : ""}`}>
-      <label className="title">רשימת הגרלות דירה בהנחה - 20/3-29/3</label>
+      <label className="title">רשימת הגרלות דירה בהנחה - 20/3-10/4</label>
       <div className="content">
         <div className="dropdown-container" dir="rtl">
           <Dropdown
