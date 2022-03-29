@@ -129,7 +129,7 @@ const App = () => {
   );
 
   return (
-    <div className={`container ${smallScreen ? "small-screen" : ""}`}>
+    <div className={`container ${smallScreen ? "small-screen" : ""} ${grouped ? "is-grouped" : ""}`}>
       <label className="title">רשימת הגרלות דירה בהנחה - 20/3-29/3</label>
       <div className="content">
         <div className="dropdown-container" dir="rtl">
@@ -185,6 +185,9 @@ const App = () => {
             <label>{smallScreen ? "לפי הגרלה" : "הצג לפי הגרלה"}</label>
           </div>
         </div>
+        {grouped && <div className="importantNote">
+          <label>בשל סדר ההגרלות והאפשרות להירשם לערים במקביל - ייתכן כי בערים המוגרלות מאוחר יותר סיכויי הזכיה האפקטיביים יהיו גבוהים יותר</label>
+        </div>}
         <div className="table-container">
           <div
             className="ag-theme-alpine"

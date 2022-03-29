@@ -269,4 +269,14 @@ a {
     height: 23px;
     width: 30px;
   }
+  .importantNote {
+    display: none;
+  }
+}
+
+.importantNote {
+  text-align: center;
+  padding: 0px 0 10px 0;
+  color: gray;
+  font-size: 13px;
 }
