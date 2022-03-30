@@ -26,7 +26,11 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dropdown from "./Dropdown";
-import { groupedColumnDefs, nonGroupedColumnDefs } from "./columnDefinitions";
+import {
+  groupedColumnDefs,
+  nonGroupedColumnDefs,
+  nonGroupedColumnDefsSmall,
+} from "./columnDefinitions";
 
 export const RowDataContext = React.createContext();
 
@@ -128,7 +132,11 @@ const App = () => {
   );
 
   return (
-    <div className={`container ${smallScreen ? "small-screen" : ""} ${grouped ? "is-grouped" : ""}`}>
+    <div
+      className={`container ${smallScreen ? "small-screen" : ""} ${
+        grouped ? "is-grouped" : ""
+      }`}
+    >
       <label className="title">רשימת הגרלות דירה בהנחה - 20/3-10/4</label>
       <div className="content">
         <div className="dropdown-container" dir="rtl">
@@ -184,9 +192,14 @@ const App = () => {
             <label>{smallScreen ? "לפי הגרלה" : "הצג לפי הגרלה"}</label>
           </div>
         </div>
-        {grouped && <div className="importantNote">
-          <label>בשל האפשרות להירשם לערים במקביל - ייתכן כי בערים אשר מוגרלות מאוחר יותר סיכויי הזכיה האפקטיביים יהיו גבוהים יותר</label>
-        </div>}
+        {grouped && (
+          <div className="importantNote">
+            <label>
+              בשל האפשרות להירשם לערים במקביל - ייתכן כי בערים אשר מוגרלות מאוחר
+              יותר סיכויי הזכיה האפקטיביים יהיו גבוהים יותר
+            </label>
+          </div>
+        )}
         <div className="table-container">
           <div
             className="ag-theme-alpine"
@@ -203,10 +216,17 @@ const App = () => {
                 defaultColDef={defaultColDef}
                 enableRtl={true}
                 rowData={grouped ? groupedRowData : rowData}
-                columnDefs={grouped ? groupedColumnDefs : nonGroupedColumnDefs}
+                columnDefs={
+                  grouped
+                    ? groupedColumnDefs
+                    : smallScreen
+                    ? nonGroupedColumnDefsSmall
+                    : nonGroupedColumnDefs
+                }
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
                 onRowDataChanged={autoSizeAll}
+                onFilterChanged={autoSizeAll}
               ></AgGridReact>
             </RowDataContext.Provider>
           </div>

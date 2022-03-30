@@ -9,7 +9,13 @@ import { formatCurrency } from "./utils";
 
 export const nonGroupedColumnDefs = [
   // { field: "populationIndex", headerName: "סדר", minWidth: 95, maxWidth: 95 },
-  { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
+  {
+    field: "LotteryNumber",
+    headerName: "הגרלה",
+    minWidth: 85,
+    maxWidth: 85,
+    pinned: "right",
+  },
   { field: "ProjectNumber", headerName: "מתחם", minWidth: 85, maxWidth: 85 },
   {
     field: "CityDescription",
@@ -17,6 +23,7 @@ export const nonGroupedColumnDefs = [
     minWidth: 120,
     maxWidth: 120,
     filter: "agTextColumnFilter",
+    pinned: "right",
   },
   {
     field: "ProjectName",
@@ -96,6 +103,10 @@ export const nonGroupedColumnDefs = [
   },
 ];
 
+export const nonGroupedColumnDefsSmall = nonGroupedColumnDefs.map((def) =>
+  def.field === "LotteryNumber" ? { ...def, pinned: null } : def
+);
+
 export const groupedColumnDefs = [
   {
     field: "populationIndex",
@@ -109,6 +120,7 @@ export const groupedColumnDefs = [
     minWidth: 120,
     // maxWidth: 120,
     filter: "agTextColumnFilter",
+    pinned: "right",
   },
   {
     cellRenderer: Registrants,
