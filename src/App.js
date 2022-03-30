@@ -26,12 +26,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dropdown from "./Dropdown";
-import {
-  getColumnDefinitions,
-  groupedColumnDefs,
-  nonGroupedColumnDefs,
-  nonGroupedColumnDefsSmall,
-} from "./columnDefinitions";
+import { getColumnDefinitions } from "./columnDefinitions";
 
 export const RowDataContext = React.createContext();
 
