@@ -14,8 +14,6 @@ import {
   fetchAllSubscribers,
   getCities,
   groupRowsByCity,
-  nonGroupedColumnDefs,
-  groupedColumnDefs,
   isSmallScreen,
 } from "./utils";
 import "./App.css";
@@ -28,6 +26,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dropdown from "./Dropdown";
+import { groupedColumnDefs, nonGroupedColumnDefs } from "./columnDefinitions";
 
 export const RowDataContext = React.createContext();
 
