@@ -4,13 +4,21 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { SelectChangeEvent } from "@mui/material";
 
-export default function Dropdown({ cityEntries = [], onCityChange }) {
+type CityEntry = [number, string];
+interface Props {
+  cityEntries: CityEntry[];
+  onCityChange: (city: number) => void;
+}
+
+export default function Dropdown({ cityEntries = [], onCityChange }: Props) {
   const [cityCode, setCityCode] = React.useState(0);
 
-  const handleChange = (event) => {
-    setCityCode(event.target.value);
-    onCityChange(event.target.value);
+  const handleChange = (event: SelectChangeEvent<number>) => {
+    const newCityCode: number = event.target.value as number;
+    setCityCode(newCityCode);
+    onCityChange(newCityCode);
   };
 
   return (

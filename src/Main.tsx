@@ -8,15 +8,8 @@ import React, {
 import rawData from "./data/data.json";
 import localData from "./data/localData.json";
 import populationData from "./data/population.json";
-import {
-  calculateChances,
-  enrichData,
-  fetchAllSubscribers,
-  getCities,
-  groupRowsByCity,
-  isSmallScreen,
-} from "./utils";
-import "./App.css";
+import { enrichData, getCities, isSmallScreen } from "./utils/logic";
+import "./Main.css";
 import ReplayIcon from "@mui/icons-material/Replay";
 import Switch from "@mui/material/Switch";
 import { AgGridReact } from "ag-grid-react";
@@ -26,81 +19,59 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dropdown from "./Dropdown";
-import { groupedColumnDefs, nonGroupedColumnDefs } from "./columnDefinitions";
+import {
+  groupedColumnDefs,
+  nonGroupedColumnDefs,
+  nonGroupedColumnDefsSmall,
+} from "./utils/columnDefinitions";
+import { LotteryDataType } from "./types/types";
+import { useRowData } from "./utils/useRowData";
 
-export const RowDataContext = React.createContext();
+export interface IRowDataContext {
+  grouped?: boolean;
+  updateForLotteryNumber?: (
+    lotteryNumber: string,
+    data: LotteryDataType
+  ) => void;
+  fetchAll?: () => void;
+  rowData?: LotteryDataType[];
+}
+
+export const RowDataContext = React.createContext<IRowDataContext>({});
 
 const data = enrichData(rawData, localData, populationData);
 
-const App = () => {
+const Main = () => {
   useEffect(() => {
     console.log("Developed by Liad Yosef");
     console.log("https://www.linkedin.com/in/liadyosef/");
   }, []);
-  const [rowData, setRowData] = useState(data);
-  const [fetching, setFetching] = useState(false);
-  const [refreshed, setRefreshed] = useState(false);
+
+  const {
+    rowData,
+    groupedRowData,
+    fetchAll,
+    fetching,
+    updateForLotteryNumber,
+    refreshed,
+  } = useRowData(data);
+
   const [grouped, setGrouped] = useState(false);
   const [smallScreen, setSmallScreen] = useState(isSmallScreen());
 
   const citiesEntries = useMemo(() => getCities(data), []);
 
-  const groupedRowData = useMemo(() => {
-    return groupRowsByCity(rowData);
-  }, [rowData]);
-
-  const fetchAll = useCallback(async () => {
-    if (fetching) {
-      return;
-    }
-    setFetching(true);
-    const allSubscribers = await fetchAllSubscribers(data);
-    setRowData(
-      calculateChances(
-        rowData.map((row) => ({
-          ...row,
-          ...allSubscribers[row.LotteryNumber],
-        }))
-      )
-    );
-    setFetching(false);
-    setRefreshed(true);
-  }, [fetching, rowData, setRefreshed]);
-
-  window.fetchAll = fetchAll;
-
   const toggleGroup = useCallback((event) => {
     setGrouped(event.target.checked);
   }, []);
-
-  const updateForLotteryNumber = useCallback(
-    (lotteryNumber, newData) => {
-      const newRowData = rowData.map((row) => {
-        if (row.LotteryNumber === lotteryNumber) {
-          return {
-            ...row,
-            ...newData,
-          };
-        }
-        return row;
-      });
-      setRowData(newRowData);
-    },
-    [rowData]
-  );
 
   const defaultColDef = {
     sortable: true,
   };
 
-  const gridRef = useRef();
+  const gridRef = useRef<any>();
   const autoSizeAll = useCallback(() => {
-    // const allColumnIds = [];
-    // gridRef.current.columnApi.getAllColumns().forEach((column) => {
-    //   allColumnIds.push(column.getId());
-    // });
-    // gridRef.current.columnApi.autoSizeColumns(allColumnIds, false);
-    gridRef.current.api.sizeColumnsToFit();
+    gridRef?.current?.api.sizeColumnsToFit();
   }, [gridRef]);
 
   useEffect(() => {
@@ -114,21 +85,25 @@ const App = () => {
     (cityCode) => {
       const city = citiesEntries.find(([code]) => code === cityCode);
       if (city?.[1]) {
-        gridRef.current.api.setFilterModel({
+        gridRef?.current?.api.setFilterModel({
           CityDescription: {
             type: "equals",
             filter: city[1],
           },
         });
       } else {
-        gridRef.current.api.setFilterModel(null);
+        gridRef?.current?.api.setFilterModel(null);
       }
     },
     [citiesEntries, gridRef]
   );
 
   return (
-    <div className={`container ${smallScreen ? "small-screen" : ""} ${grouped ? "is-grouped" : ""}`}>
+    <div
+      className={`container ${smallScreen ? "small-screen" : ""} ${
+        grouped ? "is-grouped" : ""
+      }`}
+    >
       <label className="title">רשימת הגרלות דירה בהנחה - 20/3-10/4</label>
       <div className="content">
         <div className="dropdown-container" dir="rtl">
@@ -159,7 +134,7 @@ const App = () => {
                   }`}
                   onClick={fetchAll}
                 >
-                  <ReplayIcon className="fetchIcon" title="עדכן" />
+                  <ReplayIcon className="fetchIcon" />
                 </button>
               )}
             </div>
@@ -184,9 +159,14 @@ const App = () => {
             <label>{smallScreen ? "לפי הגרלה" : "הצג לפי הגרלה"}</label>
           </div>
         </div>
-        {grouped && <div className="importantNote">
-          <label>בשל האפשרות להירשם לערים במקביל - ייתכן כי בערים אשר מוגרלות מאוחר יותר סיכויי הזכיה האפקטיביים יהיו גבוהים יותר</label>
-        </div>}
+        {grouped && (
+          <div className="importantNote">
+            <label>
+              בשל האפשרות להירשם לערים במקביל - ייתכן כי בערים אשר מוגרלות מאוחר
+              יותר סיכויי הזכיה האפקטיביים יהיו גבוהים יותר
+            </label>
+          </div>
+        )}
         <div className="table-container">
           <div
             className="ag-theme-alpine"
@@ -203,10 +183,17 @@ const App = () => {
                 defaultColDef={defaultColDef}
                 enableRtl={true}
                 rowData={grouped ? groupedRowData : rowData}
-                columnDefs={grouped ? groupedColumnDefs : nonGroupedColumnDefs}
+                columnDefs={
+                  grouped
+                    ? groupedColumnDefs
+                    : smallScreen
+                    ? nonGroupedColumnDefsSmall
+                    : nonGroupedColumnDefs
+                }
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
                 onRowDataChanged={autoSizeAll}
+                onFilterChanged={autoSizeAll}
               ></AgGridReact>
             </RowDataContext.Provider>
           </div>
@@ -245,4 +232,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Main;

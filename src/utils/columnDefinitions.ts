@@ -1,15 +1,22 @@
+import { ICellRendererParams } from "ag-grid-community";
 import {
   Chances,
   LocalChances,
   LocalRegistrants,
   Registrants,
   Registration,
-} from "./Renderers";
-import { formatCurrency } from "./utils";
+} from "../Renderers";
+import { formatCurrency } from "./commonUtils";
 
 export const nonGroupedColumnDefs = [
   // { field: "populationIndex", headerName: "סדר", minWidth: 95, maxWidth: 95 },
-  { field: "LotteryNumber", headerName: "הגרלה", minWidth: 85, maxWidth: 85 },
+  {
+    field: "LotteryNumber",
+    headerName: "הגרלה",
+    minWidth: 85,
+    maxWidth: 85,
+    pinned: "right",
+  },
   { field: "ProjectNumber", headerName: "מתחם", minWidth: 85, maxWidth: 85 },
   {
     field: "CityDescription",
@@ -17,6 +24,7 @@ export const nonGroupedColumnDefs = [
     minWidth: 120,
     maxWidth: 120,
     filter: "agTextColumnFilter",
+    pinned: "right",
   },
   {
     field: "ProjectName",
@@ -37,14 +45,16 @@ export const nonGroupedColumnDefs = [
     headerName: 'מחיר למ"ר',
     minWidth: 120,
     maxWidth: 120,
-    cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
+    cellRenderer: (params: ICellRendererParams) =>
+      formatCurrency(params.data.PricePerUnit),
   },
   {
     field: "GrantSize",
     headerName: "מענק",
     minWidth: 120,
     maxWidth: 120,
-    cellRenderer: (params) => formatCurrency(params.data.GrantSize),
+    cellRenderer: (params: ICellRendererParams) =>
+      formatCurrency(params.data.GrantSize),
   },
 
   {
@@ -96,6 +106,10 @@ export const nonGroupedColumnDefs = [
   },
 ];
 
+export const nonGroupedColumnDefsSmall = nonGroupedColumnDefs.map((def) =>
+  def.field === "LotteryNumber" ? { ...def, pinned: null } : def
+);
+
 export const groupedColumnDefs = [
   {
     field: "populationIndex",
@@ -109,6 +123,7 @@ export const groupedColumnDefs = [
     minWidth: 120,
     // maxWidth: 120,
     filter: "agTextColumnFilter",
+    pinned: "right",
   },
   {
     cellRenderer: Registrants,
@@ -155,13 +170,15 @@ export const groupedColumnDefs = [
     headerName: 'מחיר ממוצע למ"ר',
     minWidth: 170,
     // maxWidth: 170,
-    cellRenderer: (params) => formatCurrency(params.data.PricePerUnit),
+    cellRenderer: (params: ICellRendererParams) =>
+      formatCurrency(params.data.PricePerUnit),
   },
   {
     field: "GrantSize",
     headerName: "מענק ממוצע",
     minWidth: 140,
     // maxWidth: 140,
-    cellRenderer: (params) => formatCurrency(params.data.GrantSize),
+    cellRenderer: (params: ICellRendererParams) =>
+      formatCurrency(params.data.GrantSize),
   },
 ];
