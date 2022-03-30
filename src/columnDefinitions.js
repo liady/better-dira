@@ -103,16 +103,13 @@ export const nonGroupedColumnDefs = [
   },
 ];
 
-export const nonGroupedColumnDefsSmall = nonGroupedColumnDefs.map((def) =>
-  def.field === "LotteryNumber" ? { ...def, pinned: null } : def
-);
-
 export const groupedColumnDefs = [
   {
     field: "populationIndex",
     headerName: "סדר הגרלה",
     minWidth: 135,
     maxWidth: 135,
+    pinned: "right",
   },
   {
     field: "CityDescription",
@@ -177,3 +174,19 @@ export const groupedColumnDefs = [
     cellRenderer: (params) => formatCurrency(params.data.GrantSize),
   },
 ];
+
+export const nonGroupedColumnDefsSmall = nonGroupedColumnDefs.map((def) =>
+  def.field === "LotteryNumber" ? { ...def, pinned: null } : def
+);
+
+export const groupedColumnDefsSmall = groupedColumnDefs.map((def) =>
+  def.field === "populationIndex" ? { ...def, pinned: null } : def
+);
+
+export function getColumnDefinitions(grouped, smallScreen) {
+  if (grouped) {
+    return smallScreen ? groupedColumnDefsSmall : groupedColumnDefs;
+  } else {
+    return smallScreen ? nonGroupedColumnDefsSmall : nonGroupedColumnDefs;
+  }
+}

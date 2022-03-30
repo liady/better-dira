@@ -280,3 +280,6 @@ a {
   color: gray;
   font-size: 13px;
 }
+.groupBy--city {
+  text-align: end;
+}

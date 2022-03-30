@@ -27,6 +27,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import Dropdown from "./Dropdown";
 import {
+  getColumnDefinitions,
   groupedColumnDefs,
   nonGroupedColumnDefs,
   nonGroupedColumnDefsSmall,
@@ -187,7 +188,9 @@ const App = () => {
             </div>
           )}
           <div className="selectorContainer">
-            <label>{smallScreen ? "לפי עיר" : "קבץ לפי עיר"}</label>
+            <label className="groupBy--city">
+              {smallScreen ? "לפי עיר" : "קבץ לפי עיר"}
+            </label>
             <Switch onChange={toggleGroup} checked={grouped} />
             <label>{smallScreen ? "לפי הגרלה" : "הצג לפי הגרלה"}</label>
           </div>
@@ -216,13 +219,7 @@ const App = () => {
                 defaultColDef={defaultColDef}
                 enableRtl={true}
                 rowData={grouped ? groupedRowData : rowData}
-                columnDefs={
-                  grouped
-                    ? groupedColumnDefs
-                    : smallScreen
-                    ? nonGroupedColumnDefsSmall
-                    : nonGroupedColumnDefs
-                }
+                columnDefs={getColumnDefinitions(grouped, smallScreen)}
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
                 onRowDataChanged={autoSizeAll}
