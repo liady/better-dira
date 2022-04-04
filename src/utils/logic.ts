@@ -1,33 +1,15 @@
-const currencyFormatter = new Intl.NumberFormat("he-IL", {
-  style: "currency",
-  currency: "ILS",
-  maximumFractionDigits: 0,
-});
+import { averageByField, groupByField, sumByField } from "./commonUtils";
+import {
+  EnrichedLotteryDataType,
+  LocalDataType,
+  LotteryDataType,
+  PopulationDataType,
+  RealTimeEnrichedLotteryDataType,
+  RealTimeEnrichedCityDataType,
+} from "../types/types";
 
-const numberFormatter = new Intl.NumberFormat("he-IL", {
-  style: "decimal",
-  maximumFractionDigits: 0,
-});
-
-const percentageFormatter = new Intl.NumberFormat("he-IL", {
-  style: "percent",
-  maximumFractionDigits: 2,
-});
-
-export function formatPercentage(value) {
-  return percentageFormatter.format(value);
-}
-
-export function formatCurrency(number) {
-  return currencyFormatter.format(number);
-}
-
-export function formatNumber(number) {
-  return numberFormatter.format(number);
-}
-
-export function getCities(data) {
-  const citiesMap = new Map();
+export function getCities(data: LotteryDataType[]) {
+  const citiesMap = new Map<number, string>();
   data.forEach((lottery) => {
     const { CityCode, CityDescription } = lottery;
     if (!citiesMap.has(CityCode)) {
@@ -37,8 +19,12 @@ export function getCities(data) {
   return [...citiesMap.entries()];
 }
 
-export function enrichData(rawData, localData, populationData) {
-  const allRows = rawData.map((lottery) => {
+export function enrichData(
+  rawData: LotteryDataType[],
+  localData: LocalDataType,
+  populationData: PopulationDataType
+) {
+  const allRows: EnrichedLotteryDataType[] = rawData.map((lottery) => {
     const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
     const { totalPopulation: totalPopulationStr = "0" } =
       populationData["" + lottery.CityCode] || {};
@@ -49,12 +35,12 @@ export function enrichData(rawData, localData, populationData) {
       totalPopulation,
     };
   });
-  const populationSet = new Set();
+  const populationSet = new Set<number>();
   allRows.forEach((lottery) => populationSet.add(lottery.totalPopulation));
   const populationArray = [...populationSet];
   populationArray.sort((a, b) => b - a);
   const populationIndexObject = populationArray.reduce(
-    (acc, population, index) => {
+    (acc: Record<number, number>, population, index) => {
       acc[population] = index + 1;
       return acc;
     },
@@ -66,7 +52,12 @@ export function enrichData(rawData, localData, populationData) {
   return allRows;
 }
 
-export async function fetchNewData({ project, lottery }) {
+interface FetchDataArgs {
+  project: string;
+  lottery: string;
+}
+
+export async function fetchNewData({ project, lottery }: FetchDataArgs) {
   const resp = await fetch(
     `https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26PageNumber%3D1%26PageSize%3D12%26ProjectNumber%3D${project}%26LotteryNumber%3D${lottery}%26`,
     {
@@ -91,8 +82,15 @@ export async function fetchNewData({ project, lottery }) {
     TotalSubscribers,
   };
 }
-
-export function calculateChancesPerRow(row) {
+export function calculateChancesPerRow(
+  row: RealTimeEnrichedCityDataType
+): RealTimeEnrichedCityDataType;
+export function calculateChancesPerRow(
+  row: RealTimeEnrichedLotteryDataType
+): RealTimeEnrichedLotteryDataType;
+export function calculateChancesPerRow(
+  row: RealTimeEnrichedLotteryDataType | RealTimeEnrichedCityDataType
+): RealTimeEnrichedLotteryDataType | RealTimeEnrichedCityDataType {
   const {
     LotteryApparmentsNum,
     LocalHousing,
@@ -125,26 +123,36 @@ export function calculateChancesPerRow(row) {
   };
 }
 
-export function calculateChances(rowData) {
+export function calculateChances(rowData: RealTimeEnrichedLotteryDataType[]) {
   return rowData.map(calculateChancesPerRow);
 }
 
-export async function fetchAllSubscribers(data) {
+interface IRegistrantsResult {
+  _registrants: number;
+  _localRegistrants: number;
+}
+
+export async function fetchAllSubscribers(
+  data: EnrichedLotteryDataType[]
+): Promise<Record<string, IRegistrantsResult>> {
   const lotteries = data.map((row) => ({
     project: row.ProjectNumber,
     lottery: row.LotteryNumber,
   }));
-  const chunksOfSix = lotteries.reduce((acc, cur, i) => {
-    if (i % 10 === 0) {
-      acc.push([]);
-    }
-    acc[acc.length - 1].push(cur);
-    return acc;
-  }, []);
-  let res = [];
+  const chunksOfSix = lotteries.reduce(
+    (acc: Array<Array<FetchDataArgs>>, cur, i) => {
+      if (i % 10 === 0) {
+        acc.push([]);
+      }
+      acc[acc.length - 1].push(cur);
+      return acc;
+    },
+    []
+  );
+  let res: Array<[string, IRegistrantsResult]> = [];
   for (let i = 0; i < chunksOfSix.length; i++) {
     const lotteries = chunksOfSix[i];
-    const result = await Promise.all(
+    const result: Array<[string, IRegistrantsResult]> = await Promise.all(
       lotteries.map(async ({ project, lottery }) => {
         const subscribers = await fetchNewData({ project, lottery });
         return [
@@ -161,44 +169,20 @@ export async function fetchAllSubscribers(data) {
   return Object.fromEntries(res);
 }
 
-
-
-export function groupRowsByCity(rowData) {
-  const grouped = rowData.reduce((acc, cur) => {
-    const city = cur.CityDescription;
-    if (!acc[city]) {
-      acc[city] = [];
-    }
-    acc[city].push(cur);
-    return acc;
-  }, {});
+export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
+  const grouped = groupByField(rowData, "CityDescription");
   return Object.entries(grouped).map(([key, value]) => {
-    const row = {
+    const row: RealTimeEnrichedCityDataType = {
       CityDescription: key,
-      GrantSize:
-        value.reduce((acc, cur) => acc + cur.GrantSize, 0) / value.length,
-      PricePerUnit:
-        value.reduce((acc, cur) => acc + cur.PricePerUnit, 0) / value.length,
+      GrantSize: averageByField(value, "GrantSize"),
+      PricePerUnit: averageByField(value, "PricePerUnit"),
       ContractorDescription: "",
       ProjectName: "",
-      LotteryApparmentsNum: value.reduce(
-        (acc, cur) => acc + cur.LotteryApparmentsNum,
-        0
-      ),
-      LocalHousing: value.reduce((acc, cur) => acc + cur.LocalHousing, 0),
-      _registrants: value?.length
-        ? Math.round(
-            value.reduce((acc, cur) => acc + cur._registrants, 0) / value.length
-          )
-        : 0,
-      _localRegistrants: value?.length
-        ? Math.round(
-            value.reduce((acc, cur) => acc + cur._localRegistrants, 0) /
-              value.length
-          )
-        : 0,
-      populationIndex:
-        value.reduce((acc, cur) => acc + cur.populationIndex, 0) / value.length,
+      LotteryApparmentsNum: sumByField(value, "LotteryApparmentsNum"),
+      LocalHousing: sumByField(value, "LocalHousing"),
+      _registrants: averageByField(value, "_registrants", true),
+      _localRegistrants: averageByField(value, "_localRegistrants", true),
+      populationIndex: averageByField(value, "populationIndex"),
     };
     return calculateChancesPerRow(row);
   });
