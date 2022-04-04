@@ -166,7 +166,7 @@ export const groupedColumnDefs = [
     field: "PricePerUnit",
     headerName: 'מחיר ממוצע למ"ר',
     minWidth: 170,
-    // maxWidth: 170,
+    maxWidth: 170,
     cellRenderer: (params: ICellRendererParams) =>
       formatCurrency(params.data.PricePerUnit),
   },
@@ -188,10 +188,31 @@ export const groupedColumnDefsSmall = groupedColumnDefs.map((def) =>
   def.field === "populationIndex" ? { ...def, pinned: null } : def
 );
 
-export function getColumnDefinitions(grouped: boolean, smallScreen: boolean) {
+const AdjustedPricePerUnitColDef = {
+  field: "updatedPrice",
+  cellRenderer: (params: ICellRendererParams) =>
+    formatCurrency(params.data.updatedPrice),
+};
+
+export function getColumnDefinitions(
+  grouped: boolean,
+  smallScreen: boolean,
+  adjustToIndex: boolean
+) {
+  let result;
   if (grouped) {
-    return smallScreen ? groupedColumnDefsSmall : groupedColumnDefs;
+    result = smallScreen ? groupedColumnDefsSmall : groupedColumnDefs;
   } else {
-    return smallScreen ? nonGroupedColumnDefsSmall : nonGroupedColumnDefs;
+    result = smallScreen ? nonGroupedColumnDefsSmall : nonGroupedColumnDefs;
   }
+  if (adjustToIndex) {
+    result = result.map((def) => {
+      if (def.field === "PricePerUnit") {
+        console.log({ ...def, ...AdjustedPricePerUnitColDef });
+        return { ...def, ...AdjustedPricePerUnitColDef };
+      }
+      return def;
+    });
+  }
+  return result;
 }

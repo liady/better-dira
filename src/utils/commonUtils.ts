@@ -29,7 +29,7 @@ export function formatNumber(number: number) {
 export function averageByField(
   arr: Array<any>,
   fieldName: string,
-  round?: boolean
+  { round }: { round?: boolean } = {}
 ) {
   const result = arr.length
     ? arr.reduce((acc: number, cur) => {
@@ -55,4 +55,14 @@ export function groupByField<T extends Record<K, string>, K extends string>(
     acc[key].push(cur);
     return acc;
   }, {});
+}
+
+export function toShortDateString(longDateString: string) {
+  const d = new Date(longDateString);
+  const dateAsDayMonthYearString = d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  });
+  return dateAsDayMonthYearString;
 }

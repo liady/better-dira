@@ -13,6 +13,7 @@ export type LotteryDataType = {
   LotteryApparmentsNum: number;
   LocalNumber: number;
   PermitStatus: string;
+  PriceIndexDate: string | null;
   //   LotteryStageSummery: {
   //     $id: "8";
   //     TotalSubscribers: 2815;
@@ -30,11 +31,17 @@ export type LotteryDataType = {
   HousingUnitsForHandicapped: number;
 };
 
+export type EnrichedPriceIndexDataType = {
+  originalPriceIndex: number | null;
+  priceIndexChange: number | null;
+  updatedPrice: number;
+};
+
 export type EnrichedLotteryDataType = LotteryDataType & {
   LocalHousing: number;
   totalPopulation: number;
   populationIndex?: number;
-};
+} & EnrichedPriceIndexDataType;
 
 export type RealTimeEnrichedLotteryDataType = EnrichedLotteryDataType & {
   _registrants?: number;
@@ -54,6 +61,7 @@ export type RealTimeEnrichedCityDataType = {
   _registrants: number;
   _localRegistrants: number;
   populationIndex: number;
+  updatedPrice: number;
 };
 
 export type RealTimeEnrichedData =
@@ -74,5 +82,7 @@ export type PopulationDataType = Record<
     totalPopulation: string;
   }
 >;
+
+export type PriceIndexDataType = Record<string, string>;
 
 export type LocalDataType = Record<string, number>;

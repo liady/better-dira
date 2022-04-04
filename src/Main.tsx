@@ -8,6 +8,7 @@ import React, {
 import rawData from "./data/data.json";
 import localData from "./data/localData.json";
 import populationData from "./data/population.json";
+import priceIndexData from "./data/priceIndex.json";
 import { enrichData, getCities, isSmallScreen } from "./utils/logic";
 import "./Main.css";
 import ReplayIcon from "@mui/icons-material/Replay";
@@ -35,7 +36,7 @@ export interface IRowDataContext {
 
 export const RowDataContext = React.createContext<IRowDataContext>({});
 
-const data = enrichData(rawData, localData, populationData);
+const data = enrichData(rawData, localData, populationData, priceIndexData);
 
 const Main = () => {
   useEffect(() => {
@@ -53,12 +54,26 @@ const Main = () => {
   } = useRowData(data);
 
   const [grouped, setGrouped] = useState(false);
+  const [adjustToIndex, setAdjustToIndex] = useState(false);
+
   const [smallScreen, setSmallScreen] = useState(isSmallScreen());
 
   const citiesEntries = useMemo(() => getCities(data), []);
 
   const toggleGroup = useCallback((event) => {
-    setGrouped(event.target.checked);
+    if (event?.target?.checked) {
+      setGrouped(event.target.checked);
+    } else {
+      setGrouped((prev) => !prev);
+    }
+  }, []);
+
+  const toggleAdjustToIndex = useCallback((event) => {
+    if (event?.target?.checked) {
+      setAdjustToIndex(event.target.checked);
+    } else {
+      setAdjustToIndex((prev) => !prev);
+    }
   }, []);
 
   const defaultColDef = {
@@ -149,12 +164,19 @@ const Main = () => {
               </button>
             </div>
           )}
-          <div className="selectorContainer">
-            <label className="groupBy--city">
-              {smallScreen ? "לפי עיר" : "קבץ לפי עיר"}
-            </label>
-            <Switch onChange={toggleGroup} checked={grouped} />
-            <label>{smallScreen ? "לפי הגרלה" : "הצג לפי הגרלה"}</label>
+          <div className="selectorsContainer">
+            <div className="adjustPriceContainer">
+              <label className="adjutPrice" onClick={toggleAdjustToIndex} title='התאמה למדד להגרלות שבהן תאריך המדד כבר נקבע'>
+                התאם למדד
+              </label>
+              <Switch onChange={toggleAdjustToIndex} checked={adjustToIndex} />
+            </div>
+            <div className="groupingContainer">
+              <label className="groupBy--city" onClick={toggleGroup} title='הצג בטבלה את ההגרלות מקובצות לפי עיר'>
+                {smallScreen ? "לפי עיר" : "קבץ לפי עיר"}
+              </label>
+              <Switch onChange={toggleGroup} checked={grouped} />
+            </div>
           </div>
         </div>
         {grouped && (
@@ -181,7 +203,11 @@ const Main = () => {
                 defaultColDef={defaultColDef}
                 enableRtl={true}
                 rowData={grouped ? groupedRowData : rowData}
-                columnDefs={getColumnDefinitions(grouped, smallScreen)}
+                columnDefs={getColumnDefinitions(
+                  grouped,
+                  smallScreen,
+                  adjustToIndex
+                )}
                 ref={gridRef}
                 onFirstDataRendered={autoSizeAll}
                 onRowDataChanged={autoSizeAll}

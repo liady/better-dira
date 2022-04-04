@@ -1,4 +1,9 @@
-import { averageByField, groupByField, sumByField } from "./commonUtils";
+import {
+  averageByField,
+  groupByField,
+  sumByField,
+  toShortDateString,
+} from "./commonUtils";
 import {
   EnrichedLotteryDataType,
   LocalDataType,
@@ -6,6 +11,8 @@ import {
   PopulationDataType,
   RealTimeEnrichedLotteryDataType,
   RealTimeEnrichedCityDataType,
+  PriceIndexDataType,
+  EnrichedPriceIndexDataType,
 } from "../types/types";
 
 export function getCities(data: LotteryDataType[]) {
@@ -19,20 +26,51 @@ export function getCities(data: LotteryDataType[]) {
   return [...citiesMap.entries()];
 }
 
+// TODO: move to another file
+const CURRENT_PRICE_INDEX = 123.1;
+// const CURRENT_PRICE_INDEX_DATE = "01/02/2022";
+
+function getIndexData(
+  row: LotteryDataType,
+  priceIndexData: PriceIndexDataType
+): EnrichedPriceIndexDataType {
+  const noData = {
+    originalPriceIndex: null,
+    priceIndexChange: null,
+    updatedPrice: row.PricePerUnit,
+  };
+  const { PriceIndexDate } = row;
+  if (!PriceIndexDate) {
+    return noData;
+  }
+  const shortDateString = toShortDateString(PriceIndexDate);
+  const priceIndex = priceIndexData[shortDateString];
+  if (!priceIndex) {
+    return noData;
+  }
+  const originalPriceIndex = parseFloat(priceIndex);
+  const priceIndexChange = CURRENT_PRICE_INDEX / originalPriceIndex;
+  const updatedPrice = row.PricePerUnit * priceIndexChange;
+  return { originalPriceIndex, priceIndexChange, updatedPrice };
+}
+
 export function enrichData(
   rawData: LotteryDataType[],
   localData: LocalDataType,
-  populationData: PopulationDataType
+  populationData: PopulationDataType,
+  priceIndexData: PriceIndexDataType
 ) {
   const allRows: EnrichedLotteryDataType[] = rawData.map((lottery) => {
     const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
     const { totalPopulation: totalPopulationStr = "0" } =
       populationData["" + lottery.CityCode] || {};
     const totalPopulation = parseInt(totalPopulationStr.replace(/,/g, ""));
+    const indexData = getIndexData(lottery, priceIndexData);
     return {
       ...lottery,
       LocalHousing,
       totalPopulation,
+      ...indexData,
     };
   });
   const populationSet = new Set<number>();
@@ -180,9 +218,12 @@ export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
       ProjectName: "",
       LotteryApparmentsNum: sumByField(value, "LotteryApparmentsNum"),
       LocalHousing: sumByField(value, "LocalHousing"),
-      _registrants: averageByField(value, "_registrants", true),
-      _localRegistrants: averageByField(value, "_localRegistrants", true),
+      _registrants: averageByField(value, "_registrants", { round: true }),
+      _localRegistrants: averageByField(value, "_localRegistrants", {
+        round: true,
+      }),
       populationIndex: averageByField(value, "populationIndex"),
+      updatedPrice: averageByField(value, "updatedPrice"),
     };
     return calculateChancesPerRow(row);
   });
