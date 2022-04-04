@@ -43,7 +43,7 @@ export type RealTimeEnrichedLotteryDataType = EnrichedLotteryDataType & {
   localChances?: number;
 };
 
-export type RealTimeEnrichedLotteryDataTypeCity = {
+export type RealTimeEnrichedCityDataType = {
   CityDescription: string;
   GrantSize: number;
   PricePerUnit: number;
@@ -58,7 +58,7 @@ export type RealTimeEnrichedLotteryDataTypeCity = {
 
 export type RealTimeEnrichedData =
   | RealTimeEnrichedLotteryDataType
-  | RealTimeEnrichedLotteryDataTypeCity;
+  | RealTimeEnrichedCityDataType;
 
 export type CalculationDataType = {
   LotteryApparmentsNum: number;

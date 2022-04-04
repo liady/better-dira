@@ -5,7 +5,7 @@ import {
   LotteryDataType,
   PopulationDataType,
   RealTimeEnrichedLotteryDataType,
-  RealTimeEnrichedLotteryDataTypeCity,
+  RealTimeEnrichedCityDataType,
 } from "../types/types";
 
 export function getCities(data: LotteryDataType[]) {
@@ -83,14 +83,14 @@ export async function fetchNewData({ project, lottery }: FetchDataArgs) {
   };
 }
 export function calculateChancesPerRow(
-  row: RealTimeEnrichedLotteryDataTypeCity
-): RealTimeEnrichedLotteryDataTypeCity;
+  row: RealTimeEnrichedCityDataType
+): RealTimeEnrichedCityDataType;
 export function calculateChancesPerRow(
   row: RealTimeEnrichedLotteryDataType
 ): RealTimeEnrichedLotteryDataType;
 export function calculateChancesPerRow(
-  row: RealTimeEnrichedLotteryDataType | RealTimeEnrichedLotteryDataTypeCity
-): RealTimeEnrichedLotteryDataType | RealTimeEnrichedLotteryDataTypeCity {
+  row: RealTimeEnrichedLotteryDataType | RealTimeEnrichedCityDataType
+): RealTimeEnrichedLotteryDataType | RealTimeEnrichedCityDataType {
   const {
     LotteryApparmentsNum,
     LocalHousing,
@@ -172,7 +172,7 @@ export async function fetchAllSubscribers(
 export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
   const grouped = groupByField(rowData, "CityDescription");
   return Object.entries(grouped).map(([key, value]) => {
-    const row: RealTimeEnrichedLotteryDataTypeCity = {
+    const row: RealTimeEnrichedCityDataType = {
       CityDescription: key,
       GrantSize: averageByField(value, "GrantSize"),
       PricePerUnit: averageByField(value, "PricePerUnit"),
