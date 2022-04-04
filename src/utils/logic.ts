@@ -13,6 +13,7 @@ import {
   RealTimeEnrichedCityDataType,
   PriceIndexDataType,
   EnrichedPriceIndexDataType,
+  PermitCategoryEnum,
 } from "../types/types";
 
 export function getCities(data: LotteryDataType[]) {
@@ -66,11 +67,13 @@ export function enrichData(
       populationData["" + lottery.CityCode] || {};
     const totalPopulation = parseInt(totalPopulationStr.replace(/,/g, ""));
     const indexData = getIndexData(lottery, priceIndexData);
+    const PermitCategory = getPermitCategory(lottery);
     return {
       ...lottery,
       LocalHousing,
       totalPopulation,
       ...indexData,
+      PermitCategory,
     };
   });
   const populationSet = new Set<number>();
@@ -231,4 +234,25 @@ export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
 
 export function isSmallScreen() {
   return window.innerWidth < 600;
+}
+
+function getPermitCategory(lottery: LotteryDataType): PermitCategoryEnum {
+  let { PermitStatus } = lottery;
+  PermitStatus = PermitStatus.trim();
+  if (PermitStatus.startsWith("טרם הוגשה בקשה להיתר")) {
+    return PermitCategoryEnum.NotSubmitted;
+  }
+  if (PermitStatus.startsWith("טרם הוגשה בקשה עבור")) {
+    return PermitCategoryEnum.NotSubmittedFor;
+  }
+  if (PermitStatus.startsWith("הוגשה בקשה עבור")) {
+    return PermitCategoryEnum.PartiallySubmittedFor;
+  }
+  if (PermitStatus.startsWith("החלטת ועדה")) {
+    return PermitCategoryEnum.Committee;
+  }
+  if (PermitStatus.startsWith("היתר מלא")) {
+    return PermitCategoryEnum.Full;
+  }
+  return PermitCategoryEnum.Unknown;
 }
