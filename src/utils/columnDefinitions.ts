@@ -216,7 +216,6 @@ export function getColumnDefinitions(
   if (adjustToIndex) {
     result = result.map((def) => {
       if (def.field === "PricePerUnit") {
-        console.log({ ...def, ...AdjustedPricePerUnitColDef });
         return { ...def, ...AdjustedPricePerUnitColDef };
       }
       return def;
