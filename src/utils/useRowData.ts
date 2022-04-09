@@ -1,8 +1,18 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
 import { RealTimeEnrichedLotteryDataType } from "../types/types";
-import { calculateChances, fetchAllSubscribers, groupRowsByCity } from "./logic";
+import {
+  calculateChances,
+  fetchAllSubscribers,
+  groupRowsByCity,
+} from "./logic";
+
+declare global {
+  interface Window {
+    saveRafflesDataToFile: () => void;
+  }
+}
 
 export const useRowData = (initialData: RealTimeEnrichedLotteryDataType[]) => {
   const [rowData, setRowData] =
@@ -12,6 +22,23 @@ export const useRowData = (initialData: RealTimeEnrichedLotteryDataType[]) => {
   const groupedRowData = useMemo(() => {
     return groupRowsByCity(rowData);
   }, [rowData]);
+
+  useEffect(() => {
+    window.saveRafflesDataToFile = () => {
+      function download(content: any, fileName: string, contentType: string) {
+        var a = document.createElement("a");
+        var file = new Blob([content], { type: contentType });
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+      }
+      download(
+        JSON.stringify({ rowData, groupedRowData }, null, 2),
+        `raffles-${new Date().toISOString()}.json`,
+        "text/plain"
+      );
+    };
+  }, [groupedRowData, rowData]);
 
   const fetchAll = useCallback(async () => {
     if (fetching) {
