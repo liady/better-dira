@@ -3,6 +3,7 @@ import {
   Chances,
   LocalChances,
   LocalRegistrants,
+  PermitCategoryRenderer,
   Registrants,
   Registration,
 } from "../Renderers";
@@ -18,6 +19,13 @@ export const nonGroupedColumnDefs = [
     pinned: "right",
   },
   { field: "ProjectNumber", headerName: "מתחם", minWidth: 85, maxWidth: 85 },
+  {
+    field: "PermitCategory",
+    headerName: "היתר",
+    minWidth: 85,
+    maxWidth: 85,
+    cellRenderer: PermitCategoryRenderer,
+  },
   {
     field: "CityDescription",
     headerName: "עיר",

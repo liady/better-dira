@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import rawData from "./data/data.json";
+import rawData from "./data/firstRaffleData.json";
 import localData from "./data/localData.json";
 import populationData from "./data/population.json";
 import priceIndexData from "./data/priceIndex.json";
@@ -31,12 +31,15 @@ export interface IRowDataContext {
     data: LotteryDataType
   ) => void;
   fetchAll?: () => void;
+  open?: boolean;
   rowData?: LotteryDataType[];
 }
 
 export const RowDataContext = React.createContext<IRowDataContext>({});
 
 const data = enrichData(rawData, localData, populationData, priceIndexData);
+
+const open = false;
 
 const Main = () => {
   useEffect(() => {
@@ -154,25 +157,37 @@ const Main = () => {
               className={`refreshAllContainer ${fetching ? "fetching" : ""}`}
             >
               {fetching ? <RingLoader size={18} /> : null}
-              <button
-                className={`refreshAll ${fetching ? "fetching-button" : ""} ${
-                  refreshed ? "fetching-button-refreshed" : ""
-                }`}
-                onClick={fetchAll}
-              >
-                לחצו כאן לרענון הנתונים (כ10 שניות)
-              </button>
+              {!open ? (
+                <span>ההרשמה להגרלה הסתיימה</span>
+              ) : (
+                <button
+                  className={`refreshAll ${fetching ? "fetching-button" : ""} ${
+                    refreshed ? "fetching-button-refreshed" : ""
+                  }`}
+                  onClick={fetchAll}
+                >
+                  לחצו כאן לרענון הנתונים (כ10 שניות)
+                </button>
+              )}
             </div>
           )}
           <div className="selectorsContainer">
             <div className="adjustPriceContainer">
-              <label className="adjutPrice" onClick={toggleAdjustToIndex} title='התאמה למדד להגרלות שבהן תאריך המדד כבר נקבע'>
+              <label
+                className="adjutPrice"
+                onClick={toggleAdjustToIndex}
+                title="התאמה למדד להגרלות שבהן תאריך המדד כבר נקבע"
+              >
                 התאם למדד
               </label>
               <Switch onChange={toggleAdjustToIndex} checked={adjustToIndex} />
             </div>
             <div className="groupingContainer">
-              <label className="groupBy--city" onClick={toggleGroup} title='הצג בטבלה את ההגרלות מקובצות לפי עיר'>
+              <label
+                className="groupBy--city"
+                onClick={toggleGroup}
+                title="הצג בטבלה את ההגרלות מקובצות לפי עיר"
+              >
                 {smallScreen ? "לפי עיר" : "קבץ לפי עיר"}
               </label>
               <Switch onChange={toggleGroup} checked={grouped} />
@@ -193,7 +208,13 @@ const Main = () => {
             style={{ width: "100%", height: "100%" }}
           >
             <RowDataContext.Provider
-              value={{ rowData, updateForLotteryNumber, grouped, fetchAll }}
+              value={{
+                rowData,
+                updateForLotteryNumber,
+                grouped,
+                fetchAll,
+                open,
+              }}
             >
               <AgGridReact
                 suppressCellSelection={true}

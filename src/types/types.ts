@@ -37,10 +37,20 @@ export type EnrichedPriceIndexDataType = {
   updatedPrice: number;
 };
 
+export enum PermitCategoryEnum {
+  Unknown,
+  NotSubmitted,
+  NotSubmittedFor,
+  PartiallySubmittedFor,
+  Committee,
+  Full,
+}
+
 export type EnrichedLotteryDataType = LotteryDataType & {
   LocalHousing: number;
   totalPopulation: number;
   populationIndex?: number;
+  PermitCategory: PermitCategoryEnum;
 } & EnrichedPriceIndexDataType;
 
 export type RealTimeEnrichedLotteryDataType = EnrichedLotteryDataType & {
