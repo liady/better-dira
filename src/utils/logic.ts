@@ -165,6 +165,7 @@ export function calculateChancesPerRow(
 }
 
 export function calculateChances(rowData: RealTimeEnrichedLotteryDataType[]) {
+  debugger;
   return rowData.map(calculateChancesPerRow);
 }
 

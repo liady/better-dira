@@ -13,11 +13,12 @@ import { formatNumber, formatPercentage } from "./utils/commonUtils";
 import { Tooltip } from "@mui/material";
 
 export function Registration({ data }: { data: EnrichedLotteryDataType }) {
+  const { open } = useContext(RowDataContext);
   const url = `https://www.dira.moch.gov.il/${data.ProjectNumber}/${data.LotteryNumber}/ProjectInfo`;
   return (
     <div>
       <a href={url} target="_blank" rel="noreferrer" className="details-button">
-        פרטים והרשמה
+        {!open ? "פרטים" : "פרטים והרשמה"}
       </a>
     </div>
   );
@@ -60,9 +61,9 @@ function RegistrantsImpl({
   }, [data, fetchAll, grouped, updateForLotteryNumber]);
   if (data[fieldName]) {
     return (
-      <div onClick={update} className="dataCell" title={title}>
+      <div className="dataCell" title={title}>
         <span>{formatter(data[fieldName] as number)}</span>
-        <ReplayIcon className="fetchIconInner" />
+        {/* <ReplayIcon className="fetchIconInner" /> */}
       </div>
     );
   } else {
