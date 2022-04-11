@@ -1,0 +1,188 @@
+{
+  "אופקים": {
+    "CityCode": 31,
+    "CityDescription": "אופקים",
+    "_localRegistrants": 726,
+    "_registrants": 8025
+  },
+  "אור יהודה": {
+    "CityCode": 2400,
+    "CityDescription": "אור יהודה",
+    "_localRegistrants": 1287,
+    "_registrants": 34670
+  },
+  "אור עקיבא": {
+    "CityCode": 1020,
+    "CityDescription": "אור עקיבא",
+    "_localRegistrants": 588,
+    "_registrants": 8455
+  },
+  "אילת": {
+    "CityCode": 2600,
+    "CityDescription": "אילת",
+    "_localRegistrants": 1823,
+    "_registrants": 5163
+  },
+  "אשדוד": {
+    "CityCode": 70,
+    "CityDescription": "אשדוד",
+    "_localRegistrants": 5726,
+    "_registrants": 21528
+  },
+  "אשקלון": {
+    "CityCode": 7100,
+    "CityDescription": "אשקלון",
+    "_localRegistrants": 3012,
+    "_registrants": 13352
+  },
+  "באר יעקב": {
+    "CityCode": 2530,
+    "CityDescription": "באר יעקב",
+    "_localRegistrants": 492,
+    "_registrants": 38286
+  },
+  "באר שבע": {
+    "CityCode": 9000,
+    "CityDescription": "באר שבע",
+    "_localRegistrants": 2942,
+    "_registrants": 8787
+  },
+  "בית שאן": {
+    "CityCode": 9200,
+    "CityDescription": "בית שאן",
+    "_localRegistrants": 591,
+    "_registrants": 1828
+  },
+  "בני ברק": {
+    "CityCode": 6100,
+    "CityDescription": "בני ברק",
+    "_localRegistrants": 4599,
+    "_registrants": 15061
+  },
+  "בת חפר": {
+    "CityCode": 1319,
+    "CityDescription": "בת חפר",
+    "_localRegistrants": 142,
+    "_registrants": 9951
+  },
+  "דימונה": {
+    "CityCode": 2200,
+    "CityDescription": "דימונה",
+    "_localRegistrants": 303,
+    "_registrants": 1811
+  },
+  "חיפה": {
+    "CityCode": 4000,
+    "CityDescription": "חיפה",
+    "_localRegistrants": 2152,
+    "_registrants": 4999
+  },
+  "טבריה": {
+    "CityCode": 6700,
+    "CityDescription": "טבריה",
+    "_localRegistrants": 546,
+    "_registrants": 3890
+  },
+  "טורעאן": {
+    "CityCode": 498,
+    "CityDescription": "טורעאן",
+    "_localRegistrants": 46,
+    "_registrants": 120
+  },
+  "טירת כרמל": {
+    "CityCode": 2100,
+    "CityDescription": "טירת כרמל",
+    "_localRegistrants": 464,
+    "_registrants": 4119
+  },
+  "ירושלים": {
+    "CityCode": 3000,
+    "CityDescription": "ירושלים",
+    "_localRegistrants": 8403,
+    "_registrants": 13958
+  },
+  "כרמיאל": {
+    "CityCode": 1139,
+    "CityDescription": "כרמיאל",
+    "_localRegistrants": 406,
+    "_registrants": 1236
+  },
+  "לוד": {
+    "CityCode": 7000,
+    "CityDescription": "לוד",
+    "_localRegistrants": 1550,
+    "_registrants": 12399
+  },
+  "מעלה אדומים": {
+    "CityCode": 3616,
+    "CityDescription": "מעלה אדומים",
+    "_localRegistrants": 657,
+    "_registrants": 2218
+  },
+  "נהרייה": {
+    "CityCode": 9100,
+    "CityDescription": "נהרייה",
+    "_localRegistrants": 745,
+    "_registrants": 3695
+  },
+  "נצרת": {
+    "CityCode": 7300,
+    "CityDescription": "נצרת",
+    "_localRegistrants": 815,
+    "_registrants": 1217
+  },
+  "נתיבות": {
+    "CityCode": 246,
+    "CityDescription": "נתיבות",
+    "_localRegistrants": 842,
+    "_registrants": 5886
+  },
+  "עכו": {
+    "CityCode": 7600,
+    "CityDescription": "עכו",
+    "_localRegistrants": 596,
+    "_registrants": 3116
+  },
+  "עפולה": {
+    "CityCode": 7700,
+    "CityDescription": "עפולה",
+    "_localRegistrants": 628,
+    "_registrants": 4228
+  },
+  "קריית טבעון": {
+    "CityCode": 2300,
+    "CityDescription": "קריית טבעון",
+    "_localRegistrants": 298,
+    "_registrants": 3607
+  },
+  "קריית שמונה": {
+    "CityCode": 2800,
+    "CityDescription": "קריית שמונה",
+    "_localRegistrants": 515,
+    "_registrants": 1434
+  },
+  "ראשון לציון": {
+    "CityCode": 8300,
+    "CityDescription": "ראשון לציון",
+    "_localRegistrants": 6260,
+    "_registrants": 36930
+  },
+  "רכסים": {
+    "CityCode": 922,
+    "CityDescription": "רכסים",
+    "_localRegistrants": 482,
+    "_registrants": 5522
+  },
+  "שדרות": {
+    "CityCode": 1031,
+    "CityDescription": "שדרות",
+    "_localRegistrants": 627,
+    "_registrants": 2762
+  },
+  "תל אביב -יפו": {
+    "CityCode": 5000,
+    "CityDescription": "תל אביב -יפו",
+    "_localRegistrants": 10059,
+    "_registrants": 23687
+  }
+}

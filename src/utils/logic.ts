@@ -15,6 +15,7 @@ import {
   EnrichedPriceIndexDataType,
   PermitCategoryEnum,
 } from "../types/types";
+import byCityGroupedFinalData from "../data/byCityGroupedFinalData.json";
 
 export function getCities(data: LotteryDataType[]) {
   const citiesMap = new Map<number, string>();
@@ -214,6 +215,13 @@ export async function fetchAllSubscribers(
 export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
   const grouped = groupByField(rowData, "CityDescription");
   return Object.entries(grouped).map(([key, value]) => {
+    const cityFinalData =
+      (
+        byCityGroupedFinalData as Record<
+          string,
+          { _localRegistrants?: number; _registrants?: number }
+        >
+      )[key] || {};
     const row: RealTimeEnrichedCityDataType = {
       CityDescription: key,
       GrantSize: averageByField(value, "GrantSize"),
@@ -222,10 +230,14 @@ export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
       ProjectName: "",
       LotteryApparmentsNum: sumByField(value, "LotteryApparmentsNum"),
       LocalHousing: sumByField(value, "LocalHousing"),
-      _registrants: averageByField(value, "_registrants", { round: true }),
-      _localRegistrants: averageByField(value, "_localRegistrants", {
-        round: true,
-      }),
+      _registrants:
+        cityFinalData._registrants ||
+        averageByField(value, "_registrants", { round: true }),
+      _localRegistrants:
+        cityFinalData._localRegistrants ||
+        averageByField(value, "_localRegistrants", {
+          round: true,
+        }),
       populationIndex: averageByField(value, "populationIndex"),
       updatedPrice: averageByField(value, "updatedPrice"),
     };

@@ -66,3 +66,15 @@ export function toShortDateString(longDateString: string) {
   });
   return dateAsDayMonthYearString;
 }
+
+export function groupAsObjectByField<
+  T extends Record<K, string | number>,
+  K extends string
+>(array: Array<T>, field: K) {
+  const obj: Record<string, T> = {};
+  array.forEach((item) => {
+    const key = item[field] as string;
+    obj[key] = item;
+  });
+  return obj;
+}
