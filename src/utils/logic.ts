@@ -29,8 +29,8 @@ export function getCities(data: LotteryDataType[]) {
 }
 
 // TODO: move to another file
-const CURRENT_PRICE_INDEX = 123.1;
-// const CURRENT_PRICE_INDEX_DATE = "01/02/2022";
+const CURRENT_PRICE_INDEX = 124.3;
+// const CURRENT_PRICE_INDEX_DATE = "01/03/2022";
 
 function getIndexData(
   row: LotteryDataType,
