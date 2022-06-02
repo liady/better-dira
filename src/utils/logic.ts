@@ -15,7 +15,7 @@ import {
   EnrichedPriceIndexDataType,
   PermitCategoryEnum,
 } from "../types/types";
-import byCityGroupedFinalData from "../data/byCityGroupedFinalData.json";
+// import byCityGroupedFinalData from "../data/byCityGroupedFinalData.json";
 
 export function getCities(data: LotteryDataType[]) {
   const citiesMap = new Map<number, string>();
@@ -29,8 +29,8 @@ export function getCities(data: LotteryDataType[]) {
 }
 
 // TODO: move to another file
-const CURRENT_PRICE_INDEX = 124.3;
-// const CURRENT_PRICE_INDEX_DATE = "01/03/2022";
+const CURRENT_PRICE_INDEX = 125.5;
+// const CURRENT_PRICE_INDEX_DATE = "01/04/2022";
 
 function getIndexData(
   row: LotteryDataType,
@@ -166,7 +166,6 @@ export function calculateChancesPerRow(
 }
 
 export function calculateChances(rowData: RealTimeEnrichedLotteryDataType[]) {
-  debugger;
   return rowData.map(calculateChancesPerRow);
 }
 
@@ -215,13 +214,13 @@ export async function fetchAllSubscribers(
 export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
   const grouped = groupByField(rowData, "CityDescription");
   return Object.entries(grouped).map(([key, value]) => {
-    const cityFinalData =
-      (
-        byCityGroupedFinalData as Record<
-          string,
-          { _localRegistrants?: number; _registrants?: number }
-        >
-      )[key] || {};
+    // const cityFinalData =
+    //   (
+    //     byCityGroupedFinalData as Record<
+    //       string,
+    //       { _localRegistrants?: number; _registrants?: number }
+    //     >
+    //   )[key] || {};
     const row: RealTimeEnrichedCityDataType = {
       CityDescription: key,
       GrantSize: averageByField(value, "GrantSize"),
@@ -231,10 +230,10 @@ export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
       LotteryApparmentsNum: sumByField(value, "LotteryApparmentsNum"),
       LocalHousing: sumByField(value, "LocalHousing"),
       _registrants:
-        cityFinalData._registrants ||
+        // cityFinalData._registrants ||
         averageByField(value, "_registrants", { round: true }),
       _localRegistrants:
-        cityFinalData._localRegistrants ||
+        // cityFinalData._localRegistrants ||
         averageByField(value, "_localRegistrants", {
           round: true,
         }),

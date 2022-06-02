@@ -28,7 +28,7 @@ export type LotteryDataType = {
   //     ];
   //   };
   IsPreferenceForHandicapped: boolean;
-  HousingUnitsForHandicapped: number;
+  HousingUnitsForHandicapped: number | null;
 };
 
 export type EnrichedPriceIndexDataType = {

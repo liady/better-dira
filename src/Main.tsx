@@ -5,8 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import rawData from "./data/firstRaffleData.json";
-import localData from "./data/localData.json";
+import rawData from "./data/2.6-9.6/raffleData.json";
+import raffleMetaData from "./data/2.6-9.6/raffleMetaData.json";
+import localData from "./data/2.6-9.6/raffleLocalData.json";
 import populationData from "./data/population.json";
 import priceIndexData from "./data/priceIndex.json";
 import { enrichData, getCities, isSmallScreen } from "./utils/logic";
@@ -39,7 +40,7 @@ export const RowDataContext = React.createContext<IRowDataContext>({});
 
 const data = enrichData(rawData, localData, populationData, priceIndexData);
 
-const open = false;
+const open = true;
 
 const Main = () => {
   useEffect(() => {
@@ -118,7 +119,7 @@ const Main = () => {
         grouped ? "is-grouped" : ""
       }`}
     >
-      <label className="title">רשימת הגרלות דירה בהנחה - 20/3-10/4</label>
+      <label className="title">{raffleMetaData.title}</label>
       <div className="content">
         <div className="dropdown-container" dir="rtl">
           <Dropdown

@@ -30,7 +30,7 @@ export function averageByField(
   arr: Array<any>,
   fieldName: string,
   { round }: { round?: boolean } = {}
-) {
+): number {
   const result = arr.length
     ? arr.reduce((acc: number, cur) => {
         return acc + ((cur[fieldName] || 0) as number);

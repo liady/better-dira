@@ -59,7 +59,7 @@ function RegistrantsImpl({
       updateForLotteryNumber(data.LotteryNumber, data);
     }
   }, [data, fetchAll, grouped, updateForLotteryNumber]);
-  if (data[fieldName]) {
+  if (data[fieldName] || data[fieldName] === 0) {
     return (
       <div className="dataCell" title={title}>
         <span>{formatter(data[fieldName] as number)}</span>
