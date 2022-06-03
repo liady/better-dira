@@ -9,10 +9,14 @@ import {
   getRaffleDatesAsString,
   reloadWithRaffleParam,
 } from "./utils/commonUtils";
-import { getCurrentRaffleCode, getDefaultRaffleCode, raffles } from "./data/raffles";
+import {
+  getCurrentRaffleCode,
+  getDefaultRaffleCode,
+  raffles,
+} from "./data/raffles";
 
 export default function RaffleSelectDropdown() {
-  const [raffleCode, setRaffleCode] = React.useState(getCurrentRaffleCode());
+  const raffleCode = getCurrentRaffleCode();
   const raffleEntries = Object.entries(raffles).map(([code, raffle]) => [
     code,
     getRaffleDatesAsString(raffle.metadata),
@@ -20,7 +24,6 @@ export default function RaffleSelectDropdown() {
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const newRaffleCode: string = event.target.value as string;
-    setRaffleCode(newRaffleCode);
     const queryParamCode =
       newRaffleCode === getDefaultRaffleCode() ? "" : newRaffleCode;
     reloadWithRaffleParam(queryParamCode);
