@@ -12,7 +12,10 @@ interface Props {
   onCityChange: (city: number) => void;
 }
 
-export default function Dropdown({ cityEntries = [], onCityChange }: Props) {
+export default function CitySelectDropdown({
+  cityEntries = [],
+  onCityChange,
+}: Props) {
   const [cityCode, setCityCode] = React.useState(0);
 
   const handleChange = (event: SelectChangeEvent<number>) => {

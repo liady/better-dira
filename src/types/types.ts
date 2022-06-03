@@ -96,3 +96,24 @@ export type PopulationDataType = Record<
 export type PriceIndexDataType = Record<string, string>;
 
 export type LocalDataType = Record<string, number>;
+
+export type RaffleMetadata = {
+  title: string;
+  startDate: string;
+  endDate: string;
+};
+
+export type RaffleDataType = {
+  data: (LotteryDataType | RealTimeEnrichedLotteryDataType)[];
+  localData: LocalDataType;
+  metadata: RaffleMetadata;
+  cityFinalData?: Record<
+    string,
+    {
+      CityCode: number;
+      CityDescription: string;
+      _localRegistrants: number;
+      _registrants: number;
+    }
+  >;
+};

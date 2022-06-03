@@ -1,0 +1,13 @@
+.raffleSelect {
+  display: inline-block;
+  position: relative;
+  top: 3px;
+}
+
+.raffleSelect fieldset {
+  border-color: transparent !important;
+}
+
+.raffleSelect svg {
+  color: white;
+}

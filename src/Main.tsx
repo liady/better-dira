@@ -5,9 +5,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import rawData from "./data/2.6-9.6/raffleData.json";
-import raffleMetaData from "./data/2.6-9.6/raffleMetaData.json";
-import localData from "./data/2.6-9.6/raffleLocalData.json";
 import populationData from "./data/population.json";
 import priceIndexData from "./data/priceIndex.json";
 import { enrichData, getCities, isSmallScreen } from "./utils/logic";
@@ -20,10 +17,15 @@ import RingLoader from "react-spinners/RingLoader";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-import Dropdown from "./Dropdown";
+import Dropdown from "./CitySelectDropdown";
 import { getColumnDefinitions } from "./utils/columnDefinitions";
 import { LotteryDataType } from "./types/types";
 import { useRowData } from "./utils/useRowData";
+import { getCurrentRaffleData } from "./data/raffles";
+import { isRaffleDone } from "./utils/commonUtils";
+import RaffleSelectDropdown from "./RaffleSelectDropdown";
+
+const { data: rawData, metadata, localData } = getCurrentRaffleData();
 
 export interface IRowDataContext {
   grouped?: boolean;
@@ -40,7 +42,7 @@ export const RowDataContext = React.createContext<IRowDataContext>({});
 
 const data = enrichData(rawData, localData, populationData, priceIndexData);
 
-const open = true;
+const open = !isRaffleDone(metadata);
 
 const Main = () => {
   useEffect(() => {
@@ -119,7 +121,9 @@ const Main = () => {
         grouped ? "is-grouped" : ""
       }`}
     >
-      <label className="title">{raffleMetaData.title}</label>
+      <label className="title">
+        רשימת הגרלות דירה בהנחה <RaffleSelectDropdown />
+      </label>
       <div className="content">
         <div className="dropdown-container" dir="rtl">
           <Dropdown
@@ -142,7 +146,7 @@ const Main = () => {
             >
               {fetching ? (
                 <RingLoader size={16} />
-              ) : (
+              ) : open ? (
                 <button
                   className={`refreshAll ${fetching ? "fetching-button" : ""} ${
                     refreshed ? "fetching-button-refreshed" : ""
@@ -151,7 +155,7 @@ const Main = () => {
                 >
                   <ReplayIcon className="fetchIcon" />
                 </button>
-              )}
+              ) : null}
             </div>
           ) : (
             <div

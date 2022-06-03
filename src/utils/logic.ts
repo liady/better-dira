@@ -1,5 +1,6 @@
 import {
   averageByField,
+  getCurrentPriceIndex,
   groupByField,
   sumByField,
   toShortDateString,
@@ -15,6 +16,10 @@ import {
   EnrichedPriceIndexDataType,
   PermitCategoryEnum,
 } from "../types/types";
+import priceIndexData from "../data/priceIndex.json";
+import { getCurrentRaffleData } from "../data/raffles";
+
+const currentRaffleData = getCurrentRaffleData();
 // import byCityGroupedFinalData from "../data/byCityGroupedFinalData.json";
 
 export function getCities(data: LotteryDataType[]) {
@@ -28,9 +33,7 @@ export function getCities(data: LotteryDataType[]) {
   return [...citiesMap.entries()];
 }
 
-// TODO: move to another file
-const CURRENT_PRICE_INDEX = 125.5;
-// const CURRENT_PRICE_INDEX_DATE = "01/04/2022";
+const CURRENT_PRICE_INDEX = getCurrentPriceIndex(priceIndexData);
 
 function getIndexData(
   row: LotteryDataType,
@@ -213,7 +216,11 @@ export async function fetchAllSubscribers(
 
 export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
   const grouped = groupByField(rowData, "CityDescription");
+  const finalCityDataGroupedByCity = currentRaffleData.cityFinalData
+    ? currentRaffleData.cityFinalData
+    : {};
   return Object.entries(grouped).map(([key, value]) => {
+    const finalCityData = finalCityDataGroupedByCity[key] || {};
     // const cityFinalData =
     //   (
     //     byCityGroupedFinalData as Record<
@@ -230,10 +237,10 @@ export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
       LotteryApparmentsNum: sumByField(value, "LotteryApparmentsNum"),
       LocalHousing: sumByField(value, "LocalHousing"),
       _registrants:
-        // cityFinalData._registrants ||
+        finalCityData._registrants ||
         averageByField(value, "_registrants", { round: true }),
       _localRegistrants:
-        // cityFinalData._localRegistrants ||
+        finalCityData._localRegistrants ||
         averageByField(value, "_localRegistrants", {
           round: true,
         }),
