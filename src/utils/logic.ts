@@ -121,7 +121,7 @@ export async function fetchNewData({ project, lottery }: FetchDataArgs) {
   );
   const json = await resp.json();
   const { TotalLocalSubscribers = 0, TotalSubscribers = 0 } =
-    json.ProjectItems[0].LotteryStageSummery || {};
+    json.ProjectItems[0] || {};
   return {
     TotalLocalSubscribers,
     TotalSubscribers,
