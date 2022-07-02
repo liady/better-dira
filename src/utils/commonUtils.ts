@@ -1,4 +1,8 @@
-import { PriceIndexDataType, RaffleMetadata } from "../types/types";
+import {
+  LotteryDataType,
+  PriceIndexDataType,
+  RaffleMetadata,
+} from "../types/types";
 
 const currencyFormatter = new Intl.NumberFormat("he-IL", {
   style: "currency",
@@ -119,4 +123,29 @@ export function getCurrentPriceIndex(priceIndicesData: PriceIndexDataType) {
   const latest = Object.entries(priceIndicesData)[0];
   console.log(`Latest price index used: ${latest[0]} of ${latest[1]}`);
   return parseFloat(latest[1]);
+}
+
+export async function fetchAllRaffleData(): Promise<LotteryDataType[]> {
+  const result = await fetch(
+    "https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26ProjectStatus%3D4%26Entitlement%3D1%26PageNumber%3D1%26PageSize%3D500%26IsInit%3Dfalse%26",
+    {
+      headers: {
+        accept: "application/json, text/plain, */*",
+        "accept-language": "en-US,en;q=0.9,he;q=0.8",
+        "cache-control": "no-cache",
+        pragma: "no-cache",
+        "sec-ch-ua":
+          '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+      },
+      referrer: "https://www.dira.moch.gov.il/ProjectsList",
+      referrerPolicy: "strict-origin-when-cross-origin",
+      body: null,
+      method: "GET",
+    }
+  );
+  const json = await result.json();
+  return json.ProjectItems;
 }

@@ -1,5 +1,6 @@
 import {
   averageByField,
+  fetchAllRaffleData,
   getCurrentPriceIndex,
   groupByField,
   sumByField,
@@ -175,6 +176,21 @@ export function calculateChances(rowData: RealTimeEnrichedLotteryDataType[]) {
 interface IRegistrantsResult {
   _registrants: number;
   _localRegistrants: number;
+}
+
+export async function fetchAllSubscribersForActiveRaffle() {
+  const allRaffleData = await fetchAllRaffleData();
+  const allSubscribers = allRaffleData.map((row) => {
+    const { LotteryNumber, TotalSubscribers, TotalLocalSubscribers } = row;
+    return [
+      LotteryNumber,
+      {
+        _registrants: TotalSubscribers,
+        _localRegistrants: TotalLocalSubscribers,
+      },
+    ];
+  });
+  return Object.fromEntries(allSubscribers);
 }
 
 export async function fetchAllSubscribers(

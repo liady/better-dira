@@ -14,6 +14,8 @@ export type LotteryDataType = {
   LocalNumber: number;
   PermitStatus: string;
   PriceIndexDate: string | null;
+  TotalSubscribers?: number;
+  TotalLocalSubscribers?: number;
   //   LotteryStageSummery: {
   //     $id: "8";
   //     TotalSubscribers: 2815;

@@ -57,7 +57,7 @@ const Main = () => {
     fetching,
     updateForLotteryNumber,
     refreshed,
-  } = useRowData(data);
+  } = useRowData(data, open);
 
   const [grouped, setGrouped] = useState(false);
   const [adjustToIndex, setAdjustToIndex] = useState(false);

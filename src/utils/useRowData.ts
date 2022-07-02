@@ -5,6 +5,7 @@ import { RealTimeEnrichedLotteryDataType } from "../types/types";
 import {
   calculateChances,
   fetchAllSubscribers,
+  fetchAllSubscribersForActiveRaffle,
   groupRowsByCity,
 } from "./logic";
 
@@ -14,7 +15,10 @@ declare global {
   }
 }
 
-export const useRowData = (initialData: RealTimeEnrichedLotteryDataType[]) => {
+export const useRowData = (
+  initialData: RealTimeEnrichedLotteryDataType[],
+  open: boolean
+) => {
   const [rowData, setRowData] =
     useState<RealTimeEnrichedLotteryDataType[]>(initialData);
   const [fetching, setFetching] = useState(false);
@@ -45,7 +49,10 @@ export const useRowData = (initialData: RealTimeEnrichedLotteryDataType[]) => {
       return;
     }
     setFetching(true);
-    const allSubscribers = await fetchAllSubscribers(initialData);
+    const useNewAPI = open;
+    const allSubscribers = useNewAPI
+      ? await fetchAllSubscribersForActiveRaffle()
+      : await fetchAllSubscribers(initialData);
     const withSubscribers = rowData.map((row) => ({
       ...row,
       ...allSubscribers[row.LotteryNumber],
@@ -53,7 +60,7 @@ export const useRowData = (initialData: RealTimeEnrichedLotteryDataType[]) => {
     setRowData(calculateChances(withSubscribers));
     setFetching(false);
     setRefreshed(true);
-  }, [fetching, rowData, setRefreshed, initialData]);
+  }, [fetching, open, initialData, rowData]);
 
   const updateForLotteryNumber = useCallback(
     (lotteryNumber, newData) => {
