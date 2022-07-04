@@ -47,7 +47,7 @@ export const useRowData = (
   }, [groupedRowData, rowData]);
 
   const fetchAllByStrategy = useCallback(
-    async (strategyFn) => {
+    async (strategyFn, setRefreshedAfter = true) => {
       if (fetching) {
         return;
       }
@@ -60,7 +60,9 @@ export const useRowData = (
       }));
       setRowData(calculateChances(withSubscribers));
       setFetching(false);
-      setRefreshed(true);
+      if (setRefreshedAfter) {
+        setRefreshed(true);
+      }
     },
     [fetching, rowData]
   );
@@ -74,7 +76,7 @@ export const useRowData = (
   }, [fetchAllByStrategy, initialData, open]);
 
   const fetchFromGovIL = useCallback(async () => {
-    fetchAllByStrategy(() => getDataFromGovIL(endDate));
+    fetchAllByStrategy(() => getDataFromGovIL(endDate), false);
   }, [endDate, fetchAllByStrategy]);
 
   const updateForLotteryNumber = useCallback(
