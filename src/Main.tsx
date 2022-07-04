@@ -45,19 +45,22 @@ const data = enrichData(rawData, localData, populationData, priceIndexData);
 const open = !isRaffleDone(metadata);
 
 const Main = () => {
-  useEffect(() => {
-    console.log("Developed by Liad Yosef");
-    console.log("https://www.linkedin.com/in/liadyosef/");
-  }, []);
-
   const {
     rowData,
     groupedRowData,
     fetchAll,
+    fetchFromGovIL,
     fetching,
     updateForLotteryNumber,
     refreshed,
-  } = useRowData(data, open);
+  } = useRowData(data, open, metadata.endDate);
+
+  useEffect(() => {
+    console.log("Developed by Liad Yosef");
+    console.log("https://www.linkedin.com/in/liadyosef/");
+    fetchFromGovIL();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [grouped, setGrouped] = useState(false);
   const [adjustToIndex, setAdjustToIndex] = useState(false);

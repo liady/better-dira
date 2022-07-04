@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
 import { RealTimeEnrichedLotteryDataType } from "../types/types";
+import { getDataFromGovIL } from "./commonUtils";
 import {
   calculateChances,
   fetchAllSubscribers,
@@ -17,7 +18,8 @@ declare global {
 
 export const useRowData = (
   initialData: RealTimeEnrichedLotteryDataType[],
-  open: boolean
+  open: boolean,
+  endDate: string
 ) => {
   const [rowData, setRowData] =
     useState<RealTimeEnrichedLotteryDataType[]>(initialData);
@@ -44,23 +46,36 @@ export const useRowData = (
     };
   }, [groupedRowData, rowData]);
 
+  const fetchAllByStrategy = useCallback(
+    async (strategyFn) => {
+      if (fetching) {
+        return;
+      }
+      setFetching(true);
+
+      const allSubscribers = await strategyFn();
+      const withSubscribers = rowData.map((row) => ({
+        ...row,
+        ...allSubscribers[row.LotteryNumber],
+      }));
+      setRowData(calculateChances(withSubscribers));
+      setFetching(false);
+      setRefreshed(true);
+    },
+    [fetching, rowData]
+  );
+
   const fetchAll = useCallback(async () => {
-    if (fetching) {
-      return;
-    }
-    setFetching(true);
     const useNewAPI = open;
-    const allSubscribers = useNewAPI
-      ? await fetchAllSubscribersForActiveRaffle()
-      : await fetchAllSubscribers(initialData);
-    const withSubscribers = rowData.map((row) => ({
-      ...row,
-      ...allSubscribers[row.LotteryNumber],
-    }));
-    setRowData(calculateChances(withSubscribers));
-    setFetching(false);
-    setRefreshed(true);
-  }, [fetching, open, initialData, rowData]);
+    const strategyFn = useNewAPI
+      ? fetchAllSubscribersForActiveRaffle
+      : () => fetchAllSubscribers(initialData);
+    fetchAllByStrategy(strategyFn);
+  }, [fetchAllByStrategy, initialData, open]);
+
+  const fetchFromGovIL = useCallback(async () => {
+    fetchAllByStrategy(() => getDataFromGovIL(endDate));
+  }, [endDate, fetchAllByStrategy]);
 
   const updateForLotteryNumber = useCallback(
     (lotteryNumber, newData) => {
@@ -82,6 +97,7 @@ export const useRowData = (
     rowData,
     groupedRowData,
     fetchAll,
+    fetchFromGovIL,
     fetching,
     updateForLotteryNumber,
     refreshed,

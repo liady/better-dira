@@ -119,3 +119,13 @@ export type RaffleDataType = {
     }
   >;
 };
+
+export type GovILData = {
+  result: {
+    records: {
+      Subscribers: number;
+      SubscribersBenyMakom: number;
+      LotteryId: number;
+    }[];
+  };
+};

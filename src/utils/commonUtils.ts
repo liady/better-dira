@@ -1,4 +1,5 @@
 import {
+  GovILData,
   LotteryDataType,
   PriceIndexDataType,
   RaffleMetadata,
@@ -148,4 +149,22 @@ export async function fetchAllRaffleData(): Promise<LotteryDataType[]> {
   );
   const json = await result.json();
   return json.ProjectItems;
+}
+
+export async function getDataFromGovIL(endDate: string) {
+  const filters = encodeURIComponent(
+    JSON.stringify({ LotteryEndSignupDate: endDate })
+  );
+  const url = `https://data.gov.il/api/3/action/datastore_search?resource_id=7c8255d0-49ef-49db-8904-4cf917586031&limit=1000&filters=${filters}`;
+  const result = await fetch(url);
+  const json = (await result.json()) as GovILData;
+  const records = json.result.records || [];
+  const mappedRecords = records.map((record) => [
+    record.LotteryId,
+    {
+      _registrants: record.Subscribers,
+      _localRegistrants: record.SubscribersBenyMakom,
+    },
+  ]);
+  return Object.fromEntries(mappedRecords);
 }
