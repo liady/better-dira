@@ -128,7 +128,7 @@ export function getCurrentPriceIndex(priceIndicesData: PriceIndexDataType) {
 
 export async function fetchAllRaffleData(): Promise<LotteryDataType[]> {
   const result = await fetch(
-    "https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26ProjectStatus%3D4%26Entitlement%3D1%26PageNumber%3D1%26PageSize%3D500%26IsInit%3Dfalse%26",
+    "https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26ProjectStatus%3D4%26Entitlement%3D1%26PageNumber%3D1%26PageSize%3D200%26IsInit%3Dfalse%26",
     {
       headers: {
         accept: "application/json, text/plain, */*",
