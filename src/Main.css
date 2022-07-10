@@ -197,6 +197,7 @@ a {
 }
 .refreshAllContainer {
   display: flex;
+  visibility: hidden;
   align-items: center;
   justify-content: center;
   /* width: 100%; */
