@@ -126,29 +126,47 @@ export function getCurrentPriceIndex(priceIndicesData: PriceIndexDataType) {
   return parseFloat(latest[1]);
 }
 
+// export async function fetchAllRaffleData(): Promise<LotteryDataType[]> {
+//   const result = await fetch(
+//     "https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26ProjectStatus%3D4%26Entitlement%3D1%26PageNumber%3D1%26PageSize%3D500%26IsInit%3Dfalse%26",
+//     {
+//       headers: {
+//         accept: "application/json, text/plain, */*",
+//         "accept-language": "en-US,en;q=0.9,he;q=0.8",
+//         "cache-control": "no-cache",
+//         pragma: "no-cache",
+//         "sec-ch-ua":
+//           '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
+//         "sec-ch-ua-mobile": "?0",
+//         "sec-ch-ua-platform": '"Windows"',
+//         "sec-fetch-dest": "empty",
+//       },
+//       referrer: "https://www.dira.moch.gov.il/ProjectsList",
+//       referrerPolicy: "strict-origin-when-cross-origin",
+//       body: null,
+//       method: "GET",
+//     }
+//   );
+//   const json = await result.json();
+//   return json.ProjectItems;
+// }
 export async function fetchAllRaffleData(): Promise<LotteryDataType[]> {
-  const result = await fetch(
-    "https://www.dira.moch.gov.il/api/Invoker?method=Projects&param=%3FfirstApplicantIdentityNumber%3D%26secondApplicantIdentityNumber%3D%26ProjectStatus%3D4%26Entitlement%3D1%26PageNumber%3D1%26PageSize%3D200%26IsInit%3Dfalse%26",
-    {
-      headers: {
-        accept: "application/json, text/plain, */*",
-        "accept-language": "en-US,en;q=0.9,he;q=0.8",
-        "cache-control": "no-cache",
-        pragma: "no-cache",
-        "sec-ch-ua":
-          '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "empty",
-      },
-      referrer: "https://www.dira.moch.gov.il/ProjectsList",
-      referrerPolicy: "strict-origin-when-cross-origin",
-      body: null,
-      method: "GET",
-    }
-  );
-  const json = await result.json();
-  return json.ProjectItems;
+  const result = await fetch("/.netlify/functions/raffleData", {
+    headers: {
+      accept: "application/json, text/plain, */*",
+      "accept-language": "en-US,en;q=0.9,he;q=0.8",
+      "cache-control": "no-cache",
+      pragma: "no-cache",
+    },
+    body: null,
+    method: "GET",
+  });
+  const json = (await result.json()) as { b64Encoded: string };
+  return JSON.parse(decodeFromBase64(json.b64Encoded)) as LotteryDataType[];
+}
+
+function decodeFromBase64(str: string) {
+  return atob(str);
 }
 
 export async function getDataFromGovIL(endDate: string) {
