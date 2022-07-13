@@ -58,8 +58,10 @@ const Main = () => {
   useEffect(() => {
     console.log("Developed by Liad Yosef");
     console.log("https://www.linkedin.com/in/liadyosef/");
-    fetchFromGovIL();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (open) {
+      fetchFromGovIL();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [grouped, setGrouped] = useState(false);

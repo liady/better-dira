@@ -186,3 +186,28 @@ export async function getDataFromGovIL(endDate: string) {
   ]);
   return Object.fromEntries(mappedRecords);
 }
+
+const hrefs = {
+  למשתכן: "https://go.gov.il/munach-mishtaken",
+  מטרה: "https://go.gov.il/munach-matara",
+  מופחת: "https://go.gov.il/munach-mufchat",
+};
+const responsibilities = Object.keys(hrefs);
+export function getResponsibility(
+  responsibilityDescription: string = "",
+  processName: string = ""
+): {
+  href: string;
+  text: string;
+} {
+  let text = responsibilities.find((r) =>
+    responsibilityDescription.includes(r)
+  ) as keyof typeof hrefs;
+  if (!text) {
+    text = responsibilities.find((r) =>
+      processName.includes(r)
+    ) as keyof typeof hrefs;
+  }
+  const href = text ? hrefs[text] : "";
+  return { href, text };
+}

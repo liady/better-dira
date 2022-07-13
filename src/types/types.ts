@@ -16,6 +16,8 @@ export type LotteryDataType = {
   PriceIndexDate: string | null;
   TotalSubscribers?: number;
   TotalLocalSubscribers?: number;
+  ResponsibilityDescription: string;
+  ProcessName: string;
   //   LotteryStageSummery: {
   //     $id: "8";
   //     TotalSubscribers: 2815;

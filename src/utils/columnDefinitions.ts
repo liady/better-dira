@@ -4,6 +4,7 @@ import {
   LocalChances,
   LocalRegistrants,
   PermitCategoryRenderer,
+  ResponsibilityRenderer,
   Registrants,
   Registration,
 } from "../Renderers";
@@ -22,8 +23,8 @@ export const nonGroupedColumnDefs = [
   {
     field: "PermitCategory",
     headerName: "היתר",
-    minWidth: 85,
-    maxWidth: 85,
+    minWidth: 74,
+    maxWidth: 74,
     cellRenderer: PermitCategoryRenderer,
   },
   {
@@ -33,6 +34,13 @@ export const nonGroupedColumnDefs = [
     maxWidth: 120,
     filter: "agTextColumnFilter",
     pinned: "right",
+  },
+  {
+    field: "ResponsibilityDescription",
+    headerName: "תכנית",
+    minWidth: 85,
+    maxWidth: 85,
+    cellRenderer: ResponsibilityRenderer,
   },
   {
     field: "ProjectName",
@@ -59,8 +67,8 @@ export const nonGroupedColumnDefs = [
   {
     field: "GrantSize",
     headerName: "מענק",
-    minWidth: 120,
-    maxWidth: 120,
+    minWidth: 100,
+    maxWidth: 100,
     cellRenderer: (params: ICellRendererParams) =>
       formatCurrency(params.data.GrantSize),
   },
@@ -68,8 +76,8 @@ export const nonGroupedColumnDefs = [
   {
     field: "LotteryApparmentsNum",
     headerName: "דירות",
-    minWidth: 100,
-    maxWidth: 100,
+    minWidth: 80,
+    maxWidth: 80,
   },
   {
     field: "LocalHousing",

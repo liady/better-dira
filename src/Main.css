@@ -135,6 +135,13 @@ a {
   width: 100%;
   height: 100%;
 }
+a.dataCell {
+  text-decoration: none;
+  color: black;
+}
+a.dataCell:hover {
+  text-decoration: underline;
+}
 .fetchIconInner {
   width: 16px !important;
   margin-right: 8px;

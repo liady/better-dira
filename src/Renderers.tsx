@@ -9,7 +9,11 @@ import {
   PermitCategoryEnum,
   RealTimeEnrichedLotteryDataType,
 } from "./types/types";
-import { formatNumber, formatPercentage } from "./utils/commonUtils";
+import {
+  formatNumber,
+  formatPercentage,
+  getResponsibility,
+} from "./utils/commonUtils";
 import { Tooltip } from "@mui/material";
 
 export function Registration({ data }: { data: EnrichedLotteryDataType }) {
@@ -106,6 +110,26 @@ export function LocalChances({ data }: { data: EnrichedLotteryDataType }) {
       formatter={formatPercentage}
       title="סיכוי משוער"
     />
+  );
+}
+
+export function ResponsibilityRenderer({
+  data,
+}: {
+  data: EnrichedLotteryDataType;
+}) {
+  const { href, text } = getResponsibility(
+    data.ResponsibilityDescription,
+    data.ProcessName
+  );
+  return href ? (
+    <a href={href} className="dataCell" target="_blank" rel="noreferrer">
+      <span>{text}</span>
+    </a>
+  ) : (
+    <div>
+      <span>{text}</span>
+    </div>
   );
 }
 
