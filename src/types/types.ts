@@ -105,6 +105,7 @@ export type RaffleMetadata = {
   title: string;
   startDate: string;
   endDate: string;
+  endDateForGovIl: string;
 };
 
 export type RaffleDataType = {

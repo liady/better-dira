@@ -19,7 +19,8 @@ declare global {
 export const useRowData = (
   initialData: RealTimeEnrichedLotteryDataType[],
   open: boolean,
-  endDate: string
+  endDate: string,
+  endDateForGovIl: string
 ) => {
   const [rowData, setRowData] =
     useState<RealTimeEnrichedLotteryDataType[]>(initialData);
@@ -76,8 +77,8 @@ export const useRowData = (
   }, [fetchAllByStrategy, initialData, open]);
 
   const fetchFromGovIL = useCallback(async () => {
-    fetchAllByStrategy(() => getDataFromGovIL(endDate), false);
-  }, [endDate, fetchAllByStrategy]);
+    fetchAllByStrategy(() => getDataFromGovIL(endDateForGovIl), false);
+  }, [endDateForGovIl, fetchAllByStrategy]);
 
   const updateForLotteryNumber = useCallback(
     (lotteryNumber, newData) => {

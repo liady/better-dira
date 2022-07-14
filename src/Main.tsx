@@ -53,14 +53,14 @@ const Main = () => {
     fetching,
     updateForLotteryNumber,
     refreshed,
-  } = useRowData(data, open, metadata.endDate);
+  } = useRowData(data, open, metadata.endDate, metadata.endDateForGovIl);
 
   useEffect(() => {
     console.log("Developed by Liad Yosef");
     console.log("https://www.linkedin.com/in/liadyosef/");
-    if (open) {
-      fetchFromGovIL();
-    }
+    // if (open) {
+    fetchFromGovIL();
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
