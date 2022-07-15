@@ -13,6 +13,7 @@ import {
   formatNumber,
   formatPercentage,
   getResponsibility,
+  formatRelativePercentage,
 } from "./utils/commonUtils";
 import { Tooltip } from "@mui/material";
 
@@ -33,11 +34,13 @@ function RegistrantsImpl({
   fieldName,
   formatter = formatNumber,
   title = "לחץ לעדכון",
+  onClick,
 }: {
   data: RealTimeEnrichedLotteryDataType;
   fieldName: keyof RealTimeEnrichedLotteryDataType;
   formatter?: (value: number) => string;
   title?: string;
+  onClick?: () => void;
 }) {
   const [fetching, setFetching] = useState(false);
   const { updateForLotteryNumber, grouped, fetchAll } =
@@ -65,14 +68,14 @@ function RegistrantsImpl({
   }, [data, fetchAll, grouped, updateForLotteryNumber]);
   if (data[fieldName] || data[fieldName] === 0) {
     return (
-      <div className="dataCell" title={title}>
+      <div className="dataCell" title={title} onClick={onClick}>
         <span>{formatter(data[fieldName] as number)}</span>
         {/* <ReplayIcon className="fetchIconInner" /> */}
       </div>
     );
   } else {
     return (
-      <div onClick={update} className="dataCell" title="לחץ לעדכון">
+      <div onClick={onClick || update} className="dataCell" title="לחץ לעדכון">
         {fetching ? (
           <RingLoader size={18} />
         ) : (
@@ -91,24 +94,37 @@ export function LocalRegistrants({ data }: { data: EnrichedLotteryDataType }) {
   return <RegistrantsImpl data={data} fieldName="_localRegistrants" />;
 }
 
+function usePercentFormatter() {
+  const { togglePercentAsRelative, percentAsRelative } =
+    useContext(RowDataContext);
+  const formatter = percentAsRelative
+    ? formatRelativePercentage
+    : formatPercentage;
+  return { formatter, togglePercentAsRelative };
+}
+
 export function Chances({ data }: { data: EnrichedLotteryDataType }) {
+  const { formatter, togglePercentAsRelative } = usePercentFormatter();
   return (
     <RegistrantsImpl
       data={data}
       fieldName="chances"
-      formatter={formatPercentage}
+      formatter={formatter}
       title="סיכוי משוער"
+      onClick={togglePercentAsRelative}
     />
   );
 }
 
 export function LocalChances({ data }: { data: EnrichedLotteryDataType }) {
+  const { formatter, togglePercentAsRelative } = usePercentFormatter();
   return (
     <RegistrantsImpl
       data={data}
       fieldName="localChances"
-      formatter={formatPercentage}
+      formatter={formatter}
       title="סיכוי משוער"
+      onClick={togglePercentAsRelative}
     />
   );
 }

@@ -25,6 +25,15 @@ export function formatPercentage(value: number) {
   return percentageFormatter.format(value);
 }
 
+export function formatRelativePercentage(value: number) {
+  if (value) {
+    const outOf = Math.ceil(1 / value);
+    return `1 מתוך ${outOf}`;
+  } else {
+    return "אין סיכוי";
+  }
+}
+
 export function formatCurrency(number: number) {
   return currencyFormatter.format(number);
 }

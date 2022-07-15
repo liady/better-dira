@@ -35,6 +35,8 @@ export interface IRowDataContext {
   ) => void;
   fetchAll?: () => void;
   open?: boolean;
+  percentAsRelative?: boolean;
+  togglePercentAsRelative?: () => void;
   rowData?: LotteryDataType[];
 }
 
@@ -45,6 +47,9 @@ const data = enrichData(rawData, localData, populationData, priceIndexData);
 const open = !isRaffleDone(metadata);
 
 const Main = () => {
+  const [percentAsRelative, setPercentAsRelative] = useState(false);
+  const togglePercentAsRelative = () =>
+    setPercentAsRelative(!percentAsRelative);
   const {
     rowData,
     groupedRowData,
@@ -224,6 +229,8 @@ const Main = () => {
                 grouped,
                 fetchAll,
                 open,
+                percentAsRelative,
+                togglePercentAsRelative,
               }}
             >
               <AgGridReact
