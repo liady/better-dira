@@ -309,3 +309,13 @@ a.dataCell:hover {
   cursor: pointer;
   text-align: end;
 }
+.priceHasTitle {
+  color: blue;
+  cursor: pointer;
+}
+.priceToolTip {
+  direction: rtl;
+}
+.MuiTooltip-tooltip {
+  direction: rtl !important;
+}

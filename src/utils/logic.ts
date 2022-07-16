@@ -3,6 +3,7 @@ import {
   fetchAllRaffleData,
   getCurrentPriceIndex,
   groupByField,
+  isMatara,
   sumByField,
   toShortDateString,
 } from "./commonUtils";
@@ -262,6 +263,7 @@ export function groupRowsByCity(rowData: RealTimeEnrichedLotteryDataType[]) {
         }),
       populationIndex: averageByField(value, "populationIndex"),
       updatedPrice: averageByField(value, "updatedPrice"),
+      ProcessName: value.every((row) => isMatara(row)) ? "מטרה" : "",
     };
     return calculateChancesPerRow(row);
   });

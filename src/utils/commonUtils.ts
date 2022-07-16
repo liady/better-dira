@@ -1,4 +1,5 @@
 import {
+  EnrichedLotteryDataType,
   GovILData,
   LotteryDataType,
   PriceIndexDataType,
@@ -219,4 +220,12 @@ export function getResponsibility(
   }
   const href = text ? hrefs[text] : "";
   return { href, text };
+}
+
+export function isMatara(row: EnrichedLotteryDataType) {
+  const responsibility = getResponsibility(
+    row.ResponsibilityDescription,
+    row.ProcessName
+  );
+  return responsibility.text === "מטרה";
 }

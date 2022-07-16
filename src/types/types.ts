@@ -76,6 +76,7 @@ export type RealTimeEnrichedCityDataType = {
   _localRegistrants: number;
   populationIndex: number;
   updatedPrice: number;
+  ProcessName: string;
 };
 
 export type RealTimeEnrichedData =

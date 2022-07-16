@@ -7,6 +7,7 @@ import {
   ResponsibilityRenderer,
   Registrants,
   Registration,
+  CurrencyRenderer,
 } from "../Renderers";
 import { formatCurrency } from "./commonUtils";
 
@@ -61,8 +62,7 @@ export const nonGroupedColumnDefs = [
     headerName: 'מחיר למ"ר',
     minWidth: 120,
     maxWidth: 120,
-    cellRenderer: (params: ICellRendererParams) =>
-      formatCurrency(params.data.PricePerUnit),
+    cellRenderer: CurrencyRenderer,
   },
   {
     field: "GrantSize",
@@ -183,8 +183,7 @@ export const groupedColumnDefs = [
     headerName: 'מחיר ממוצע למ"ר',
     minWidth: 170,
     maxWidth: 170,
-    cellRenderer: (params: ICellRendererParams) =>
-      formatCurrency(params.data.PricePerUnit),
+    cellRenderer: CurrencyRenderer,
   },
   {
     field: "GrantSize",
@@ -206,8 +205,7 @@ export const groupedColumnDefsSmall = groupedColumnDefs.map((def) =>
 
 const AdjustedPricePerUnitColDef = {
   field: "updatedPrice",
-  cellRenderer: (params: ICellRendererParams) =>
-    formatCurrency(params.data.updatedPrice),
+  cellRenderer: CurrencyRenderer,
 };
 
 export function getColumnDefinitions(

@@ -11,6 +11,7 @@ import {
 } from "./types/types";
 import {
   formatNumber,
+  formatCurrency,
   formatPercentage,
   getResponsibility,
   formatRelativePercentage,
@@ -180,4 +181,31 @@ export function PermitCategoryRenderer({
       <CircleIcon style={{ color, fontSize: "16px" }} />
     </Tooltip>
   );
+}
+
+const discountedPriceTitle =
+  'המחיר לפני הנחה. שיעור ההנחה יעמוד על 20% ממחיר הדירה הסופי (כולל מע"מ) ועד כ-300,000 ₪';
+export function CurrencyRenderer({
+  data,
+  value,
+}: {
+  data: EnrichedLotteryDataType;
+  value: number;
+}) {
+  const responsibility = getResponsibility(
+    data.ResponsibilityDescription,
+    data.ProcessName
+  );
+  if (responsibility?.text) {
+    const isMatara = responsibility.text.includes("מטרה");
+    const discountedPrice = isMatara;
+    if (discountedPrice) {
+      return (
+        <Tooltip title={discountedPriceTitle} className="priceToolTip">
+          <span className="priceHasTitle">{formatCurrency(value)}</span>
+        </Tooltip>
+      );
+    }
+  }
+  return formatCurrency(value);
 }
