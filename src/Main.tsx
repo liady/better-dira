@@ -70,7 +70,7 @@ const Main = () => {
   }, []);
 
   const [grouped, setGrouped] = useState(false);
-  const [adjustToIndex, setAdjustToIndex] = useState(false);
+  const [adjustToIndex, setAdjustToIndex] = useState(true);
 
   const [smallScreen, setSmallScreen] = useState(isSmallScreen());
 
