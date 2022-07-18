@@ -27,6 +27,9 @@ export function formatPercentage(value: number) {
 }
 
 export function formatRelativePercentage(value: number) {
+  if (value === 1) {
+    return "ודאי";
+  }
   if (value) {
     const outOf = Math.ceil(1 / value);
     return `1 מתוך ${outOf}`;
@@ -105,6 +108,11 @@ export function getCurrentRaffleQueryParam() {
 export function isRaffleDone(raffleMetadata: RaffleMetadata) {
   const raffleEndDate = new Date(`${raffleMetadata.endDate} 23:59`);
   return raffleEndDate < new Date();
+}
+
+export function raffleHasntStarted(raffleMetadata: RaffleMetadata) {
+  const raffleStartDate = new Date(`${raffleMetadata.startDate} 00:00`);
+  return raffleStartDate > new Date();
 }
 
 export function reloadWithRaffleParam(raffleCode: string) {

@@ -1,9 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 import { RowDataContext } from "./Main";
-import ReplayIcon from "@mui/icons-material/Replay";
 import CircleIcon from "@mui/icons-material/Circle";
 import { calculateChancesPerRow, fetchNewData } from "./utils/logic";
-import { RingLoader } from "react-spinners";
 import {
   EnrichedLotteryDataType,
   PermitCategoryEnum,
@@ -67,24 +65,24 @@ function RegistrantsImpl({
       updateForLotteryNumber(data.LotteryNumber, data);
     }
   }, [data, fetchAll, grouped, updateForLotteryNumber]);
-  if (data[fieldName] || data[fieldName] === 0) {
-    return (
-      <div className="dataCell" title={title} onClick={onClick}>
-        <span>{formatter(data[fieldName] as number)}</span>
-        {/* <ReplayIcon className="fetchIconInner" /> */}
-      </div>
-    );
-  } else {
-    return (
-      <div onClick={onClick || update} className="dataCell" title="לחץ לעדכון">
-        {fetching ? (
-          <RingLoader size={18} />
-        ) : (
-          <ReplayIcon className="fetchIcon" />
-        )}
-      </div>
-    );
-  }
+  // if (data[fieldName] || data[fieldName] === 0) {
+  return (
+    <div className="dataCell" title={title} onClick={onClick}>
+      <span>{formatter((data[fieldName] as number) || 0)}</span>
+      {/* <ReplayIcon className="fetchIconInner" /> */}
+    </div>
+  );
+  // } else {
+  //   return (
+  //     <div onClick={onClick || update} className="dataCell" title="לחץ לעדכון">
+  //       {fetching ? (
+  //         <RingLoader size={18} />
+  //       ) : (
+  //         <ReplayIcon className="fetchIcon" />
+  //       )}
+  //     </div>
+  //   );
+  // }
 }
 
 export function Registrants({ data }: { data: EnrichedLotteryDataType }) {
@@ -117,7 +115,11 @@ export function Chances({ data }: { data: EnrichedLotteryDataType }) {
   );
 }
 
-export function LocalChances({ data }: { data: EnrichedLotteryDataType }) {
+export function LocalChances({
+  data,
+}: {
+  data: RealTimeEnrichedLotteryDataType;
+}) {
   const { formatter, togglePercentAsRelative } = usePercentFormatter();
   return (
     <RegistrantsImpl

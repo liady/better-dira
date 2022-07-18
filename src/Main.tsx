@@ -22,7 +22,7 @@ import { getColumnDefinitions } from "./utils/columnDefinitions";
 import { LotteryDataType } from "./types/types";
 import { useRowData } from "./utils/useRowData";
 import { getCurrentRaffleData } from "./data/raffles";
-import { isRaffleDone } from "./utils/commonUtils";
+import { isRaffleDone, raffleHasntStarted } from "./utils/commonUtils";
 import RaffleSelectDropdown from "./RaffleSelectDropdown";
 
 const { data: rawData, metadata, localData } = getCurrentRaffleData();
@@ -34,17 +34,25 @@ export interface IRowDataContext {
     data: LotteryDataType
   ) => void;
   fetchAll?: () => void;
-  open?: boolean;
+  open: boolean;
+  done: boolean;
+  notOpenYet: boolean;
   percentAsRelative?: boolean;
   togglePercentAsRelative?: () => void;
   rowData?: LotteryDataType[];
 }
 
-export const RowDataContext = React.createContext<IRowDataContext>({});
-
 const data = enrichData(rawData, localData, populationData, priceIndexData);
 
-const open = !isRaffleDone(metadata);
+const done = isRaffleDone(metadata);
+const notOpenYet = raffleHasntStarted(metadata);
+const open = !done && !notOpenYet;
+
+export const RowDataContext = React.createContext<IRowDataContext>({
+  done,
+  notOpenYet,
+  open,
+});
 
 const Main = () => {
   const [percentAsRelative, setPercentAsRelative] = useState(false);
@@ -173,7 +181,11 @@ const Main = () => {
             >
               {fetching ? <RingLoader size={18} /> : null}
               {!open ? (
-                <span>ההרשמה להגרלה הסתיימה</span>
+                done ? (
+                  <span>ההרשמה להגרלה הסתיימה</span>
+                ) : (
+                  <span>ההרשמה להגרלה טרם נפתחה</span>
+                )
               ) : (
                 <button
                   className={`refreshAll ${fetching ? "fetching-button" : ""} ${
@@ -229,6 +241,8 @@ const Main = () => {
                 grouped,
                 fetchAll,
                 open,
+                done,
+                notOpenYet,
                 percentAsRelative,
                 togglePercentAsRelative,
               }}

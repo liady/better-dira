@@ -68,7 +68,8 @@ export function enrichData(
   priceIndexData: PriceIndexDataType
 ) {
   const allRows: EnrichedLotteryDataType[] = rawData.map((lottery) => {
-    const LocalHousing = localData[parseInt(lottery.LotteryNumber)];
+    const LocalHousing =
+      lottery.LocalHousing || localData[parseInt(lottery.LotteryNumber)] || 0;
     const { totalPopulation: totalPopulationStr = "0" } =
       populationData["" + lottery.CityCode] || {};
     const totalPopulation = parseInt(totalPopulationStr.replace(/,/g, ""));
@@ -145,18 +146,23 @@ export function calculateChancesPerRow(
     _registrants = 0,
   } = row;
 
-  const localHanded = Math.min(LocalHousing, _localRegistrants);
+  const localRegistrants = Math.max(_localRegistrants, 1);
+  const registrants = Math.max(_registrants, 2);
 
-  const chancesForALocalToGetLocalHousing = _localRegistrants
-    ? Math.min(localHanded / _localRegistrants, 1)
-    : 0;
+  const localHanded = Math.min(LocalHousing, localRegistrants);
 
-  const chancesForNonLocalToGetNonLocalHousing = _registrants
-    ? Math.min(
-        (LotteryApparmentsNum - localHanded) / (_registrants - localHanded),
-        1
-      )
-    : 0;
+  const chancesForALocalToGetLocalHousing = Math.min(
+    localHanded / localRegistrants,
+    1
+  );
+
+  const leftForNonLocal = LotteryApparmentsNum - localHanded;
+  const leftRegistrantsNonLocal = registrants - localHanded;
+
+  const chancesForNonLocalToGetNonLocalHousing = Math.min(
+    leftForNonLocal / leftRegistrantsNonLocal,
+    1
+  );
 
   const localChances =
     chancesForALocalToGetLocalHousing +

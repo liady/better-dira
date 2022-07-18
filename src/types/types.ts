@@ -18,6 +18,7 @@ export type LotteryDataType = {
   TotalLocalSubscribers?: number;
   ResponsibilityDescription: string;
   ProcessName: string;
+  LocalHousing?: number;
   //   LotteryStageSummery: {
   //     $id: "8";
   //     TotalSubscribers: 2815;
