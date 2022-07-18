@@ -291,6 +291,12 @@ function getPermitCategory(lottery: LotteryDataType): PermitCategoryEnum {
   if (PermitStatus.startsWith("הוגשה בקשה עבור")) {
     return PermitCategoryEnum.PartiallySubmittedFor;
   }
+  if (PermitStatus.startsWith("הגשת בקשה עבור")) {
+    return PermitCategoryEnum.PartiallySubmittedFor;
+  }
+  if (PermitStatus.startsWith("הגשת בקשה להיתר עבור")) {
+    return PermitCategoryEnum.PartiallySubmittedFor;
+  }
   if (PermitStatus.startsWith("החלטת ועדה")) {
     return PermitCategoryEnum.Committee;
   }
