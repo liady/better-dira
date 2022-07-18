@@ -1,7 +1,6 @@
-import { useCallback, useContext, useState } from "react";
+import { useContext } from "react";
 import { RowDataContext } from "./Main";
 import CircleIcon from "@mui/icons-material/Circle";
-import { calculateChancesPerRow, fetchNewData } from "./utils/logic";
 import {
   EnrichedLotteryDataType,
   PermitCategoryEnum,
@@ -41,30 +40,30 @@ function RegistrantsImpl({
   title?: string;
   onClick?: () => void;
 }) {
-  const [fetching, setFetching] = useState(false);
-  const { updateForLotteryNumber, grouped, fetchAll } =
-    useContext(RowDataContext);
-  const update = useCallback(async () => {
-    if (!fetchAll || !updateForLotteryNumber) {
-      return;
-    }
-    if (grouped) {
-      setFetching(true);
-      await fetchAll();
-      setFetching(false);
-    } else {
-      const response = await fetchNewData({
-        project: data.ProjectNumber,
-        lottery: data.LotteryNumber,
-      });
-      data._registrants = response.TotalSubscribers;
-      data._localRegistrants = response.TotalLocalSubscribers;
-      const { chances, localChances } = calculateChancesPerRow(data);
-      data.chances = chances;
-      data.localChances = localChances;
-      updateForLotteryNumber(data.LotteryNumber, data);
-    }
-  }, [data, fetchAll, grouped, updateForLotteryNumber]);
+  // const [fetching, setFetching] = useState(false);
+  // const { updateForLotteryNumber, grouped, fetchAll } =
+  //   useContext(RowDataContext);
+  // const update = useCallback(async () => {
+  //   if (!fetchAll || !updateForLotteryNumber) {
+  //     return;
+  //   }
+  //   if (grouped) {
+  //     setFetching(true);
+  //     await fetchAll();
+  //     setFetching(false);
+  //   } else {
+  //     const response = await fetchNewData({
+  //       project: data.ProjectNumber,
+  //       lottery: data.LotteryNumber,
+  //     });
+  //     data._registrants = response.TotalSubscribers;
+  //     data._localRegistrants = response.TotalLocalSubscribers;
+  //     const { chances, localChances } = calculateChancesPerRow(data);
+  //     data.chances = chances;
+  //     data.localChances = localChances;
+  //     updateForLotteryNumber(data.LotteryNumber, data);
+  //   }
+  // }, [data, fetchAll, grouped, updateForLotteryNumber]);
   // if (data[fieldName] || data[fieldName] === 0) {
   return (
     <div className="dataCell" title={title} onClick={onClick}>
